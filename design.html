@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>DesignQTEE | By Ameen</title>
+    <title>DesignQTEE | Elite Visual Studio</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Inter:wght@300;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -13,7 +13,7 @@
             --bg: #000000; 
             --gold: #e6be8a; 
             --text: #ffffff;
-            --glass: rgba(255, 255, 255, 0.03);
+            --glass: rgba(255, 255, 255, 0.15); /* 15% Transparency */
             --border: rgba(230, 190, 138, 0.2);
             --transition: cubic-bezier(0.23, 1, 0.32, 1);
         }
@@ -21,7 +21,7 @@
         body.light-mode {
             --bg: #ffffff; 
             --text: #1a1a1a; 
-            --glass: rgba(0, 0, 0, 0.03); 
+            --glass: rgba(0, 0, 0, 0.08); 
             --border: rgba(0, 0, 0, 0.1);
         }
 
@@ -33,109 +33,167 @@
             font-family: 'Inter', sans-serif; 
             overflow-x: hidden; 
             transition: background 0.6s ease, color 0.6s ease;
-            cursor: crosshair;
         }
 
-        /* --- CLICK RIPPLE ANIMATION --- */
-        .ripple {
+        /* --- LIVE GRADIENT & 45° LINE BACKGROUND --- */
+        .bg-wrapper {
             position: fixed;
-            width: 10px;
-            height: 10px;
-            background: var(--gold);
-            border-radius: 50%;
-            pointer-events: none;
-            transform: translate(-50%, -50%);
-            animation: ripple-effect 0.7s var(--transition) forwards;
-            z-index: 10000;
-            opacity: 0.6;
+            inset: 0;
+            z-index: -1;
+            background: linear-gradient(-45deg, #000000, #2b004d, #ffffff, #1a0033);
+            background-size: 400% 400%;
+            animation: gradientMove 15s ease infinite;
         }
-        @keyframes ripple-effect {
-            to { width: 120px; height: 120px; opacity: 0; }
+
+        .bg-lines {
+            position: absolute;
+            inset: -100%;
+            background: repeating-linear-gradient(
+                45deg,
+                rgba(125, 125, 125, 0.1) 0px,
+                rgba(125, 125, 125, 0.1) 1px,
+                transparent 1px,
+                transparent 40px
+            );
+            animation: linesMove 20s linear infinite;
+        }
+
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes linesMove {
+            from { transform: translateY(0); }
+            to { transform: translateY(40px); }
         }
 
         /* --- PRELOADER --- */
         #preloader {
-            position: fixed; inset: 0; background: var(--bg); z-index: 9999;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            position: fixed; inset: 0; background: #000; z-index: 9999;
+            display: flex; justify-content: center; align-items: center;
+            transition: opacity 0.8s var(--transition);
         }
-        .loader {
-            width: 50px; height: 50px; border: 2px solid var(--glass);
-            border-top: 2px solid var(--gold); border-radius: 50%;
-            animation: spin 1.5s linear infinite;
-        }
-        @keyframes spin { 100% { transform: rotate(360deg); } }
 
-        /* --- NAVIGATION --- */
+        .loader-container {
+            position: relative;
+            width: 240px; height: 240px;
+            display: flex; justify-content: center; align-items: center;
+        }
+
+        .gold-ring {
+            width: 180px; height: 180px;
+            border: 12px solid var(--gold);
+            border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+        }
+
+        .loader-brand { color: #fff; font-weight: 700; font-size: 16px; letter-spacing: 1px; }
+
+        .dot-orbit {
+            position: absolute; width: 100%; height: 100%;
+            animation: orbit 2.5s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+        }
+
+        .orbit-dot {
+            position: absolute; top: 15px; left: 50%;
+            transform: translateX(-50%);
+            width: 26px; height: 26px;
+            background-color: #fff; border-radius: 50%;
+            box-shadow: 0 0 20px var(--gold);
+        }
+
+        @keyframes orbit { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        /* --- HEADER --- */
         header {
             position: fixed; top: 0; width: 100%; padding: 25px 30px;
             display: flex; justify-content: space-between; align-items: center;
-            z-index: 1000; backdrop-filter: blur(15px); border-bottom: 1px solid var(--border);
+            z-index: 1100; backdrop-filter: blur(15px); border-bottom: 1px solid var(--border);
         }
 
         .theme-toggle {
             display: flex; align-items: center; gap: 8px; cursor: pointer;
             padding: 8px 15px; border: 1px solid var(--border); border-radius: 30px;
         }
-        .theme-toggle i { color: var(--gold); font-size: 14px; transition: 0.4s; }
-        .theme-toggle span { font-size: 10px; font-weight: 700; letter-spacing: 1px; color: var(--gold); }
 
-        .menu-btn { cursor: pointer; display: flex; flex-direction: column; gap: 6px; }
-        .menu-btn span { width: 25px; height: 1px; background: var(--gold); transition: 0.4s; }
+        .menu-btn { cursor: pointer; display: flex; flex-direction: column; gap: 6px; z-index: 1101; }
+        .menu-btn span { width: 25px; height: 1px; background: var(--gold); transition: 0.3s; }
 
+        /* --- GLASSY NAV OVERLAY --- */
         .nav-overlay {
-            position: fixed; inset: 0; background: var(--bg); z-index: 1050;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            clip-path: circle(0% at 90% 5%); transition: 0.8s var(--transition);
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.15); /* 15% Transparency */
+            backdrop-filter: blur(25px); /* Strong glassy blur */
+            -webkit-backdrop-filter: blur(25px);
+            z-index: 1050;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            clip-path: circle(0% at 90% 5%);
+            transition: 0.8s var(--transition);
         }
+        
         .nav-overlay.open { clip-path: circle(150% at 90% 5%); }
-        .nav-overlay a { 
-            text-decoration: none; color: var(--text); font-size: clamp(30px, 8vw, 50px);
-            font-family: 'Cormorant Garamond', serif; margin: 15px 0; transition: 0.3s;
-        }
-        .nav-overlay a:hover { color: var(--gold); letter-spacing: 4px; }
 
-        /* --- CONTENT --- */
+        .nav-overlay a { 
+            text-decoration: none; 
+            color: var(--text); 
+            font-size: clamp(30px, 8vw, 50px); 
+            margin: 15px 0; 
+            font-family: 'Cormorant Garamond';
+            transition: 0.3s;
+            letter-spacing: 2px;
+        }
+
+        .nav-overlay a:hover { color: var(--gold); letter-spacing: 6px; }
+
+        /* --- MAIN CONTENT --- */
         .container { max-width: 600px; margin: 0 auto; padding: 150px 25px 50px; text-align: center; }
 
         .hero-title { 
             font-family: 'Cormorant Garamond', serif; font-size: clamp(50px, 10vw, 80px);
             background: linear-gradient(90deg, var(--text), var(--gold), var(--text));
             background-size: 200%; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            animation: shine 4s linear infinite; line-height: 1;
+            animation: shine 4s linear infinite;
         }
-        @keyframes shine { to { background-position: 200% center; } }
-
-        .slogan { font-family: 'Cormorant Garamond', serif; font-style: italic; color: var(--gold); margin-top: 10px; opacity: 0.8; }
 
         .work-grid { margin: 60px 0; display: flex; flex-direction: column; gap: 40px; }
-        .work-item { 
-            position: relative; border-radius: 4px; overflow: hidden; 
-            border: 1px solid var(--border); background: var(--glass);
-        }
-        .work-item img { width: 100%; height: 450px; object-fit: cover; transition: 0.6s; }
-        .work-item:hover img { transform: scale(1.05); filter: brightness(0.7); }
+        .work-item { border-radius: 8px; overflow: hidden; border: 1px solid var(--border); background: var(--glass); }
+        .work-item img { width: 100%; height: 450px; object-fit: cover; }
+        .inquiry-btn { display: block; padding: 20px; text-decoration: none; background: var(--gold); color: #000; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; }
 
-        .inquiry-btn {
-            display: block; width: 100%; padding: 20px; text-decoration: none;
-            background: var(--gold); color: #000; font-weight: 700; font-size: 11px;
-            letter-spacing: 2px; text-transform: uppercase; transition: 0.3s;
-        }
-        .inquiry-btn:hover { background: #fff; }
-
+        /* --- GLASSY COMMENT BOX --- */
         .comment-box { 
-            background: var(--glass); padding: 30px; border-radius: 4px; 
-            border: 1px solid var(--border); text-align: left;
+            background: rgba(255, 255, 255, 0.15); 
+            backdrop-filter: blur(20px); 
+            -webkit-backdrop-filter: blur(20px);
+            padding: 40px; border-radius: 15px; 
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            text-align: left;
+            margin-top: 40px;
         }
+
         textarea {
-            width: 100%; height: 120px; background: rgba(125,125,125,0.1);
-            border: 1px solid var(--border); color: var(--text); padding: 15px;
-            margin: 20px 0; outline: none; font-family: 'Inter'; border-radius: 4px;
+            width: 100%; height: 120px; 
+            background: rgba(0, 0, 0, 0.2); 
+            border: 1px solid var(--border); 
+            color: var(--text); padding: 15px;
+            margin: 20px 0; outline: none; border-radius: 8px;
         }
+
         .submit-btn {
-            width: 100%; padding: 15px; background: none; border: 1px solid var(--gold);
-            color: var(--gold); font-weight: 700; cursor: pointer; transition: 0.3s;
+            width: 100%; padding: 18px; 
+            background: rgba(230, 190, 138, 0.1); 
+            backdrop-filter: blur(5px);
+            border: 1px solid var(--gold); color: var(--gold); 
+            font-weight: 700; cursor: pointer; transition: 0.4s; border-radius: 8px;
         }
-        .submit-btn:hover { background: var(--gold); color: #000; }
+        .submit-btn:hover { background: var(--gold); color: #000; box-shadow: 0 0 20px rgba(230, 190, 138, 0.4); }
 
         .reveal { opacity: 0; transform: translateY(40px); transition: 1s var(--transition); }
         .reveal.active { opacity: 1; transform: translateY(0); }
@@ -145,17 +203,28 @@
 </head>
 <body>
 
+    <div class="bg-wrapper">
+        <div class="bg-lines"></div>
+    </div>
+
     <div id="preloader">
-        <div class="loader"></div>
+        <div class="loader-container">
+            <div class="gold-ring">
+                <div class="loader-brand">DesignQTEE<span>.in</span></div>
+            </div>
+            <div class="dot-orbit">
+                <div class="orbit-dot"></div>
+            </div>
+        </div>
     </div>
 
     <header>
         <div class="theme-toggle" onclick="toggleTheme()">
             <i id="themeIcon" class="fas fa-moon"></i>
-            <span id="modeText">DARK</span>
+            <span id="modeText" style="color:var(--gold); font-size: 10px; font-weight:700;">DARK</span>
         </div>
-        <div class="menu-btn" id="menuBtn" onclick="toggleMenu()">
-            <span></span><span></span><span></span>
+        <div class="menu-btn" onclick="toggleMenu()">
+            <span></span><span style="margin: 6px 0;"></span><span></span>
         </div>
     </header>
 
@@ -163,40 +232,22 @@
         <a href="#designs" onclick="toggleMenu()">PORTFOLIO</a>
         <a href="https://wa.me/917907826147" target="_blank">CONTACT</a>
         <a href="#more-info" onclick="toggleMenu()">LEAVE MESSAGE</a>
-        <div style="margin-top: 40px; color: var(--gold); cursor: pointer;" onclick="toggleMenu()">[ CLOSE ]</div>
+        <div style="margin-top: 40px; color: var(--gold); cursor: pointer; font-weight: 700; letter-spacing: 2px;" onclick="toggleMenu()">CLOSE</div>
     </nav>
 
     <div class="container">
         <div class="reveal">
             <h1 class="hero-title">DesignQTEE</h1>
-            <p class="slogan">Premium Visual Craftsmanship</p>
+            <p style="font-family:'Cormorant Garamond'; font-style:italic; color:var(--gold); margin-top:10px;">Premium Visual Craftsmanship</p>
         </div>
 
         <div id="designs" class="work-grid">
             <div class="work-item reveal">
-                <img src="
-                    
-                    image1.png
-                    " alt="Design 1">
+                <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800" alt="Design 1">
                 <a href="https://wa.me/917907826147" class="inquiry-btn">Enquire Now</a>
             </div>
             <div class="work-item reveal">
-                <img src="
-                    image2.png
-                    " alt="Design 2">
-                <a href="https://wa.me/917907826147" class="inquiry-btn">Enquire Now</a>
-            </div>
-            <div class="work-item reveal">
-                <img src="
-                    image3.png
-                    " alt="Design 2">
-                <a href="https://wa.me/917907826147" class="inquiry-btn">Enquire Now</a>
-            </div>
-            
-            <div class="work-item reveal">
-                <img src="
-                    image4.png
-                    " alt="Design 2">
+                <img src="https://images.unsplash.com/photo-1634157703702-3c124b455499?w=800" alt="Design 2">
                 <a href="https://wa.me/917907826147" class="inquiry-btn">Enquire Now</a>
             </div>
         </div>
@@ -207,71 +258,40 @@
             <button class="submit-btn" onclick="sendToWhatsApp()">SEND VIA WHATSAPP</button>
         </div>
 
-        <footer class="reveal">
-            &copy; 2026 DESIGNQTEE STUDIO | CREATED BY AMEEN
-        </footer>
+        <footer class="reveal">&copy; 2026 DESIGNQTEE STUDIO | CREATED BY AMEEN</footer>
     </div>
 
     <script>
-        // --- CLICK RIPPLE ---
-        window.addEventListener('mousedown', (e) => {
-            const ripple = document.createElement('div');
-            ripple.className = 'ripple';
-            ripple.style.left = `${e.clientX}px`;
-            ripple.style.top = `${e.clientY}px`;
-            document.body.appendChild(ripple);
-            setTimeout(() => ripple.remove(), 700);
-        });
-
-        // --- PRELOADER ---
         window.addEventListener('load', () => {
             setTimeout(() => {
                 const loader = document.getElementById('preloader');
-                loader.style.transition = '0.8s';
                 loader.style.opacity = '0';
                 setTimeout(() => loader.remove(), 800);
-            }, 1500);
+            }, 3000); 
         });
 
-        // --- THEME TOGGLE ---
         function toggleTheme() {
-            const body = document.body;
-            const icon = document.getElementById('themeIcon');
-            const text = document.getElementById('modeText');
-            
-            body.classList.toggle('light-mode');
-            const isLight = body.classList.contains('light-mode');
-            
-            icon.className = isLight ? 'fas fa-sun' : 'fas fa-moon';
-            text.innerText = isLight ? 'LIGHT' : 'DARK';
-            
-            // Animation for icon spin
-            icon.style.transform = 'rotate(360deg)';
-            setTimeout(() => icon.style.transform = 'rotate(0deg)', 400);
+            document.body.classList.toggle('light-mode');
+            const isLight = document.body.classList.contains('light-mode');
+            document.getElementById('themeIcon').className = isLight ? 'fas fa-sun' : 'fas fa-moon';
+            document.getElementById('modeText').innerText = isLight ? 'LIGHT' : 'DARK';
         }
 
-        // --- NAVIGATION ---
         function toggleMenu() {
             const nav = document.getElementById('navOverlay');
             nav.classList.toggle('open');
             document.body.style.overflow = nav.classList.contains('open') ? 'hidden' : 'auto';
         }
 
-        // --- WHATSAPP LOGIC ---
         function sendToWhatsApp() {
             const comment = document.getElementById('userComment').value;
-            if(!comment.trim()) return alert("Message cannot be empty.");
-            const url = `https://wa.me/917907826147?text=${encodeURIComponent("Inquiry: " + comment)}`;
-            window.open(url, '_blank');
+            if(!comment.trim()) return alert("Please type something.");
+            window.open(`https://wa.me/917907826147?text=${encodeURIComponent("Inquiry: " + comment)}`, '_blank');
         }
 
-        // --- REVEAL ON SCROLL ---
         const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) entry.target.classList.add('active');
-            });
+            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
         }, { threshold: 0.1 });
-
         document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
     </script>
 </body>
