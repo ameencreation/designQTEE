@@ -5,355 +5,251 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>DesignQTEE | Elite Visual Studio</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Playfair+Display:wght@700;900&family=Inter:wght@300;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Playfair+Display:wght@700;900&family=Inter:wght@300;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
-            --bg: #000000; 
+            --bg-black: #000000;
+            --bg-purple: #1a0033; 
             --gold: #e6be8a; 
-            --purple: #1a0033; 
             --text: #ffffff;
-            --glass: rgba(255, 255, 255, 0.05); 
-            --border: rgba(230, 190, 138, 0.2);
-            --transition: cubic-bezier(0.23, 1, 0.32, 1);
+            --border: rgba(230, 190, 138, 0.15);
+            --transition: cubic-bezier(0.77, 0, 0.175, 1);
+            --insta-neon: #ff007f;
+            --wa-neon: #00ff41;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
+        body { background: var(--bg-black); color: var(--text); font-family: 'Inter', sans-serif; overflow-x: hidden; }
 
-        body { 
-            background: #000; 
-            color: var(--text); 
-            font-family: 'Inter', sans-serif; 
-            overflow-x: hidden; 
-        }
-
-        /* --- BACKGROUND WITH NEW FAST SEAMLESS DIAGONAL LINES --- */
-        .bg-wrapper {
-            position: fixed; inset: 0; z-index: -1;
-            background: linear-gradient(-45deg, #000000, #1a0033, #000000);
-        }
-
-        .bg-lines {
-            position: absolute; inset: 0;
-            background-image: repeating-linear-gradient(
-                45deg, /* Diagonal 45-degree angle */
-                rgba(230, 190, 138, 0.08) 0px, 
-                rgba(230, 190, 138, 0.08) 1px,
-                transparent 1px,
-                transparent 40px /* Spacing between lines */
-            );
-            background-size: 56.6px 56.6px; /* Optimized size for seamless 45deg loop */
-            animation: fastSeamlessLoop 1s linear infinite; /* Ultra fast and smooth loop */
-        }
-
-        @keyframes fastSeamlessLoop {
-            from { background-position: 0 0; }
-            to { background-position: 0 56.6px; } /* Seamless downward movement */
-        }
-
-        /* --- PREMIUM PRELOADER (PREVIOUS CREATIVE UPDATE) --- */
-        #preloader {
+        /* --- PRELOADER --- */
+        #loader-wrapper {
             position: fixed; inset: 0; background: #000; z-index: 9999;
             display: flex; justify-content: center; align-items: center;
-            flex-direction: column;
-            transition: opacity 1s var(--transition);
+            transition: opacity 0.8s ease;
         }
-
-        .loader-wrap {
-            position: relative;
-            width: 80px; height: 80px;
-            display: flex; justify-content: center; align-items: center;
+        .spinner {
+            width: 3em; height: 3em; border-radius: 50%; border: 2px solid #444;
+            box-shadow: -10px -10px 10px #6359f8, 0px -10px 10px 0px #9c32e2, 10px -10px 10px #f36896, 10px 0 10px #ff0b0b, 10px 10px 10px 0px#ff5500, 0 10px 10px 0px #ff9500, -10px 10px 10px 0px #ffb700;
+            animation: rot55 0.7s linear infinite; position: relative;
         }
+        .spinnerin { border: 2px solid #444; width: 1.5em; height: 1.5em; border-radius: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+        @keyframes rot55 { to { transform: rotate(360deg); } }
+        .loader-hidden { opacity: 0; visibility: hidden; }
 
-        .pulse-ring {
-            position: absolute;
-            width: 100%; height: 100%;
-            border: 1px solid var(--gold);
-            border-radius: 50%;
-            animation: pulseExpand 2s infinite;
-            opacity: 0;
+        /* --- BACKGROUND 45° LINES --- */
+        .bg-wrapper { 
+            position: fixed; inset: 0; z-index: -1; 
+            background: linear-gradient(135deg, var(--bg-black), var(--bg-purple), var(--bg-black));
+            background-size: 400% 400%; animation: gradientShift 15s ease infinite; overflow: hidden; 
         }
-
-        .loader-logo {
-            font-family: 'Playfair Display', serif;
-            font-size: 14px; color: var(--gold); letter-spacing: 4px; font-weight: 700;
-            animation: logoShine 2s infinite linear;
-            z-index: 2;
+        @keyframes gradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        .bg-lines {
+            position: absolute; width: 300%; height: 300%; top: -100%; left: -150%;
+            background-image: linear-gradient(rgba(230, 190, 138, 0.08) 1.5px, transparent 1.5px);
+            background-size: 100% 60px; transform: rotate(45deg); animation: moveLines 5s linear infinite; 
         }
+        @keyframes moveLines { from { transform: rotate(45deg) translateY(0); } to { transform: rotate(45deg) translateY(60px); } }
 
-        @keyframes pulseExpand {
-            0% { transform: scale(0.5); opacity: 0; }
-            50% { opacity: 0.5; }
-            100% { transform: scale(1.5); opacity: 0; }
-        }
+        /* --- HEADER & HAMBURGER TO CLOSE --- */
+        header { position: fixed; top: 0; width: 100%; padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; z-index: 3000; backdrop-filter: blur(15px); border-bottom: 1px solid var(--border); }
+        .brand-name { font-family: 'Playfair Display'; font-size: 24px; font-weight: 900; color: var(--gold); text-decoration: none; letter-spacing: 2px; }
+        
+        .menu-btn { cursor: pointer; z-index: 3100; width: 35px; height: 25px; position: relative; }
+        .menu-btn span { display: block; position: absolute; height: 2px; width: 100%; background: var(--gold); transition: .3s ease-in-out; }
+        .menu-btn span:nth-child(1) { top: 0px; }
+        .menu-btn span:nth-child(2) { top: 10px; }
+        .menu-btn span:nth-child(3) { top: 20px; }
 
-        @keyframes logoShine {
-            0% { opacity: 0.5; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.05); }
-            100% { opacity: 0.5; transform: scale(1); }
-        }
+        /* Transform to 'X' Close */
+        .menu-btn.open span:nth-child(1) { top: 10px; transform: rotate(135deg); }
+        .menu-btn.open span:nth-child(2) { opacity: 0; left: -60px; }
+        .menu-btn.open span:nth-child(3) { top: 10px; transform: rotate(-135deg); }
 
-        /* --- HEADER --- */
-        header {
-            position: fixed; top: 0; width: 100%; padding: 25px 30px;
-            display: flex; justify-content: space-between; align-items: center;
-            z-index: 1100; backdrop-filter: blur(15px); border-bottom: 1px solid var(--border);
-        }
-        .brand-name { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 900; color: var(--gold); text-decoration: none; letter-spacing: 1px; }
-        .menu-btn { cursor: pointer; display: flex; flex-direction: column; gap: 7px; }
-        .menu-btn span { width: 28px; height: 2px; background: var(--gold); transition: 0.3s; }
-
-        /* --- NAV OVERLAY --- */
-        .nav-overlay {
-            position: fixed; inset: 0; z-index: 1050;
+        /* --- CIRCULAR NAV OVERLAY --- */
+        .nav-overlay { 
+            position: fixed; inset: 0; z-index: 2500; 
+            background: rgba(0,0,0,0.98); 
+            clip-path: circle(0% at 95% 5%);
+            transition: clip-path 0.8s var(--transition);
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            clip-path: circle(0% at 90% 5%); transition: 0.8s var(--transition);
-            background: rgba(0, 0, 0, 0.98); backdrop-filter: blur(25px);
         }
-        .nav-overlay.open { clip-path: circle(150% at 90% 5%); }
-        .nav-overlay a { text-decoration: none; color: #fff; font-size: 38px; margin: 15px 0; font-family: 'Cormorant Garamond'; letter-spacing: 2px; transition: 0.3s; }
+        .nav-overlay.open { clip-path: circle(150% at 95% 5%); }
+        .nav-links { list-style: none; text-align: center; }
+        .nav-links li { overflow: hidden; margin: 15px 0; }
+        .nav-overlay a { 
+            display: inline-block; text-decoration: none; color: #fff; 
+            font-size: clamp(28px, 7vw, 50px); font-family: 'Cormorant Garamond'; 
+            letter-spacing: 2px; transform: translateY(100%); transition: 0.6s var(--transition);
+        }
+        .nav-overlay.open a { transform: translateY(0); }
+        .nav-links li:nth-child(1) a { transition-delay: 0.1s; }
+        .nav-links li:nth-child(2) a { transition-delay: 0.2s; }
+        .nav-links li:nth-child(3) a { transition-delay: 0.3s; }
+        .nav-links li:nth-child(4) a { transition-delay: 0.4s; }
         .nav-overlay a:hover { color: var(--gold); letter-spacing: 5px; }
 
-        /* --- MAIN CONTENT --- */
-        .container { max-width: 900px; margin: 0 auto; padding: 180px 20px 50px; text-align: center; }
+        .mini-icons-menu { display: flex; gap: 30px; margin-top: 40px; opacity: 0; transition: 0.8s ease 0.5s; }
+        .nav-overlay.open .mini-icons-menu { opacity: 1; }
+        .mini-icons-menu i { font-size: 26px; color: var(--gold); }
 
+        /* --- HERO & BLUR SLOGAN --- */
+        .container { max-width: 1200px; margin: 0 auto; padding: 200px 20px 100px; text-align: center; }
         .hero-title { 
-            font-family: 'Playfair Display', serif; font-size: clamp(55px, 12vw, 90px);
-            background: linear-gradient(90deg, #b8860b, #fff, #b8860b);
+            font-family: 'Playfair Display'; font-size: clamp(45px, 12vw, 110px); font-weight: 900; 
+            background: linear-gradient(to right, #fff 20%, var(--gold) 40%, var(--gold) 60%, #fff 80%);
             background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            animation: shine 3s linear infinite; margin-bottom: 10px;
-            font-weight: 900;
+            animation: shine 4s linear infinite, floatTitle 6s ease-in-out infinite;
         }
+        @keyframes floatTitle { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
         @keyframes shine { to { background-position: 200% center; } }
-
-        /* --- WORK GRID --- */
-        .work-grid { margin: 80px 0; display: grid; grid-template-columns: 1fr; gap: 60px; }
         
-        @media (min-width: 768px) {
-            .work-grid { grid-template-columns: 1fr 1fr; gap: 30px; }
+        /* Premium Blur Entry Animation */
+        .slogan { 
+            color: var(--gold); font-family: 'Cormorant Garamond'; font-style: italic; font-size: clamp(18px, 4vw, 24px); 
+            margin-top: 20px; letter-spacing: 2px;
+            animation: premiumBlurClear 4s cubic-bezier(0.19, 1, 0.22, 1) forwards; 
+        }
+        @keyframes premiumBlurClear {
+            0% { filter: blur(25px); opacity: 0; transform: scale(1.2) translateY(10px); letter-spacing: 15px; }
+            50% { filter: blur(10px); opacity: 0.5; }
+            100% { filter: blur(0); opacity: 1; transform: scale(1) translateY(0); letter-spacing: 2px; }
         }
 
-        .work-item { 
-            position: relative; border-radius: 12px; overflow: hidden; 
-            background: var(--glass); border: 2px solid var(--gold);
-            animation: liveBorder 4s infinite ease-in-out;
-            transition: 0.6s var(--transition);
-            display: flex; flex-direction: column;
-        }
-        .work-item img { width: 100%; height: 400px; object-fit: cover; transition: 0.8s; cursor: pointer; }
-        .work-item:hover { transform: translateY(-10px); }
-        
-        /* INQUIRY BUTTON: SOLID GOLD */
-        .inquiry-btn { 
-            display: block; padding: 20px; text-decoration: none; 
-            color: #000; font-weight: 900; font-size: 13px; letter-spacing: 2px;
-            text-transform: uppercase;
-            background: var(--gold);
-            transition: background 0.3s ease;
-        }
-        .inquiry-btn:hover { background: #ffffff; }
+        /* --- GRID --- */
+        .work-grid { margin: 80px 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        .work-item { position: relative; background: rgba(10,10,10,0.8); border: 1px solid var(--border); overflow: hidden; transition: 0.6s; }
+        .work-item img { width: 100%; height: 450px; object-fit: cover; opacity: 0.7; transition: 0.8s; cursor: pointer; }
+        .work-item:hover img { opacity: 1; transform: scale(1.05); }
+        .enquire-bar { display: block; width: 100%; padding: 18px; text-align: center; background: var(--gold); color: #000; text-decoration: none; font-weight: 900; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; }
 
-        @keyframes liveBorder {
-            0%, 100% { border-color: #e6be8a; box-shadow: 0 0 15px rgba(230,190,138,0.3); }
-            50% { border-color: #ffffff; box-shadow: 0 0 30px rgba(255,255,255,0.4); }
-        }
+        /* --- NEON SOCIALS --- */
+        .social-icons-wrap { display: flex; justify-content: center; gap: 50px; margin: 60px 0; }
+        .social-icons-wrap a { font-size: 70px; transition: 0.4s; }
+        .icon-insta { color: var(--insta-neon); filter: drop-shadow(0 0 5px var(--insta-neon)); }
+        .icon-wa { color: var(--wa-neon); filter: drop-shadow(0 0 5px var(--wa-neon)); }
+        .social-icons-wrap a:hover { transform: scale(1.1) translateY(-10px); filter: drop-shadow(0 0 30px currentColor); color: #fff; }
 
-        /* --- CUSTOM MODAL --- */
-        .custom-modal-overlay {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.85);
-            display: none; justify-content: center; align-items: center;
-            z-index: 3000; backdrop-filter: blur(10px);
-        }
-        .custom-modal {
-            background: #111; border: 1px solid var(--gold);
-            padding: 40px; border-radius: 20px; text-align: center;
-            max-width: 400px; width: 90%;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-            transform: scale(0.8); transition: 0.3s var(--transition);
-        }
-        .custom-modal.show { transform: scale(1); }
-        .custom-modal h2 { font-family: 'Playfair Display'; color: var(--gold); margin-bottom: 15px; }
-        .custom-modal p { margin-bottom: 30px; font-size: 14px; opacity: 0.8; letter-spacing: 1px; }
-        .modal-btns { display: flex; gap: 15px; justify-content: center; }
-        .modal-btn { 
-            padding: 12px 30px; border-radius: 8px; cursor: pointer; 
-            font-weight: 700; font-size: 12px; letter-spacing: 1px; border: none; transition: 0.3s;
-        }
-        .btn-ok { background: var(--gold); color: #000; }
-        .btn-cancel { background: transparent; color: #fff; border: 1px solid var(--border); }
+        /* --- MODAL --- */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.94); z-index: 4000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(15px); }
+        .modal-box { background: #000; border: 1px solid var(--gold); padding: 50px; text-align: center; width: 90%; max-width: 400px; transform: translateY(50px); opacity: 0; transition: 0.5s; }
+        .modal-box.active { transform: translateY(0); opacity: 1; }
+        .btn { width: 100%; padding: 16px; margin: 10px 0; cursor: pointer; font-weight: 800; border: none; letter-spacing: 1px; text-transform: uppercase; font-family: 'Inter'; }
 
-        /* --- FULL SCREEN OVERLAY --- */
-        .fs-overlay {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.95);
-            z-index: 2500; display: none; justify-content: center; align-items: center;
-            backdrop-filter: blur(15px);
-        }
-        .fs-overlay img { max-width: 95%; max-height: 90vh; border: 1px solid var(--gold); }
-        .fs-close { position: absolute; top: 30px; right: 30px; color: var(--gold); font-size: 40px; cursor: pointer; }
+        .fs-view { position: fixed; inset: 0; background: #000; z-index: 5000; display: none; justify-content: center; align-items: center; }
+        .fs-view img { max-width: 90%; max-height: 85vh; border: 1px solid var(--border); }
+        .fs-x { position: absolute; top: 30px; right: 40px; color: var(--gold); font-size: 45px; cursor: pointer; }
 
-        /* --- FOOTER & COMMENTS --- */
-        .comment-box { 
-            background: rgba(255, 255, 255, 0.03); padding: 50px 30px; border-radius: 20px; 
-            border: 1px solid var(--border); margin-top: 80px; text-align: left;
-            backdrop-filter: blur(15px); max-width: 800px; margin-left: auto; margin-right: auto;
-        }
-        textarea { width: 100%; height: 120px; background: rgba(0,0,0,0.4); border: 1px solid var(--border); color: #fff; padding: 20px; border-radius: 12px; margin-bottom: 25px; outline: none; }
-        .submit-btn { width: 100%; padding: 20px; background: var(--gold); border: none; font-weight: 800; cursor: pointer; border-radius: 12px; color: #000; }
-        
-        footer { margin-top: 100px; padding-bottom: 50px; text-align: center; }
-        .social-icons { display: flex; justify-content: center; gap: 40px; margin-bottom: 30px; }
-        .social-icons a { color: var(--gold); font-size: 35px; text-decoration: none; }
-        .copyright { opacity: 0.5; font-size: 11px; letter-spacing: 3px; }
         .reveal { opacity: 0; transform: translateY(40px); transition: 1.2s var(--transition); }
         .reveal.active { opacity: 1; transform: translateY(0); }
+        footer { padding: 60px 20px; text-align: center; opacity: 0.3; font-size: 9px; letter-spacing: 5px; }
     </style>
 </head>
 <body>
 
-    <div class="bg-wrapper">
-        <div class="bg-lines"></div>
+    <div id="loader-wrapper">
+        <div class="spinner"><div class="spinnerin"></div></div>
     </div>
 
-    <div class="custom-modal-overlay" id="confirmModal">
-        <div class="custom-modal" id="modalBox">
-            <h2>VIEW DESIGN</h2>
-            <p>Do you wish to experience this masterpiece in full screen?</p>
-            <div class="modal-btns">
-                <button class="modal-btn btn-cancel" onclick="closeModal()">CANCEL</button>
-                <button class="modal-btn btn-ok" id="confirmOk">VIEW FULL SCREEN</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="fs-overlay" id="imageOverlay" onclick="closeFS()">
-        <span class="fs-close">&times;</span>
-        <img src="" id="fullImage">
-    </div>
-
-    <div id="preloader">
-        <div class="loader-wrap">
-            <div class="pulse-ring"></div>
-            <div class="loader-logo">QTEE</div>
-        </div>
-    </div>
+    <div class="bg-wrapper"><div class="bg-lines"></div></div>
 
     <header>
         <a href="#" class="brand-name">DesignQTEE</a>
-        <div class="menu-btn" onclick="toggleMenu()">
-            <span></span><span style="margin: 7px 0;"></span><span></span>
+        <div class="menu-btn" id="menuToggle">
+            <span></span>
+            <span></span>
+            <span></span>
         </div>
     </header>
 
     <nav class="nav-overlay" id="navOverlay">
-        <a href="#designs" onclick="toggleMenu()">PORTFOLIO</a>
-        <a href="https://wa.me/917907826147" target="_blank">CONTACT</a>
-        <a href="#more-info" onclick="toggleMenu()">LEAVE MESSAGE</a>
-        <p style="color:var(--gold); margin-top:50px; cursor:pointer;" onclick="toggleMenu()">[ CLOSE ]</p>
+        <ul class="nav-links">
+            <li><a href="#portfolio" onclick="toggleMenu()">ABOUT</a></li>
+            <li><a href="https://wa.me/917907826147" target="_blank">CONTACT</a></li>
+            <li><a href="https://wa.me/917907826147" target="_blank">WHATSAPP</a></li>
+            <li><a href="https://www.instagram.com/DesignQTEE" target="_blank">INSTAGRAM</a></li>
+        </ul>
+        <div class="mini-icons-menu">
+            <a href="https://www.instagram.com/DesignQTEE" target="_blank"><i class="fab fa-instagram"></i></a>
+            <a href="https://wa.me/917907826147" target="_blank"><i class="fab fa-whatsapp"></i></a>
+        </div>
     </nav>
 
-    <div class="container">
-        <div class="reveal">
+    <main class="container">
+        <section class="reveal">
             <h1 class="hero-title">DesignQTEE</h1>
-            <p style="font-family:'Inter', sans-serif; text-transform:uppercase; color:var(--gold); font-size: 14px; letter-spacing: 5px; font-weight:700;">ARRIVED THE RIGHT PLACE</p>
+            <p class="slogan">" You Arrived at Right Place "</p>
+        </section>
+
+        <div id="portfolio" class="work-grid">
+            <div class="work-item reveal"><img src="image1.png" onclick="askView('image1.png')"><a href="https://wa.me/917907826147" class="enquire-bar">Enquire Now</a></div>
+            <div class="work-item reveal"><img src="image2.png" onclick="askView('image2.png')"><a href="https://wa.me/917907826147" class="enquire-bar">Enquire Now</a></div>
+            <div class="work-item reveal"><img src="image3.png" onclick="askView('image3.png')"><a href="https://wa.me/917907826147" class="enquire-bar">Enquire Now</a></div>
+            <div class="work-item reveal"><img src="image4.png" onclick="askView('image4.png')"><a href="https://wa.me/917907826147" class="enquire-bar">Enquire Now</a></div>
         </div>
 
-        <div id="designs" class="work-grid">
-            <div class="work-item reveal">
-                <img src="image1.png" onclick="showPremiumConfirm(this.src)">
-                <a href="https://wa.me/917907826147" class="inquiry-btn">Enquire Now</a>
+        <section class="social-connect reveal">
+            <div class="social-icons-wrap">
+                <a href="https://www.instagram.com/DesignQTEE" target="_blank" class="icon-insta"><i class="fab fa-instagram"></i></a>
+                <a href="https://wa.me/917907826147" target="_blank" class="icon-wa"><i class="fab fa-whatsapp"></i></a>
             </div>
-            <div class="work-item reveal">
-                <img src="image2.png" onclick="showPremiumConfirm(this.src)">
-                <a href="https://wa.me/917907826147" class="inquiry-btn">Enquire Now</a>
-            </div>
-            <div class="work-item reveal">
-                <img src="image3.png" onclick="showPremiumConfirm(this.src)">
-                <a href="https://wa.me/917907826147" class="inquiry-btn">Enquire Now</a>
-            </div>
-            <div class="work-item reveal">
-                <img src="image4.png" onclick="showPremiumConfirm(this.src)">
-                <a href="https://wa.me/917907826147" class="inquiry-btn">Enquire Now</a>
-            </div>
-        </div>
+        </section>
 
-        <div id="more-info" class="comment-box reveal">
-            <h3 style="color:var(--gold); margin-bottom:20px; font-family:'Playfair Display'; font-size: 32px;">Start Your Vision</h3>
-            <textarea id="userComment" placeholder="Tell us about your project..."></textarea>
-            <button class="submit-btn" onclick="sendToWhatsApp()">SEND VIA WHATSAPP</button>
-        </div>
+        <footer>&copy; 2026 DESIGNQTEE STUDIO | CREATED BY AMEEN</footer>
+    </main>
 
-        <footer>
-            <div class="social-icons reveal">
-                <a href="https://www.instagram.com/DesignQTEE" target="_blank"><i class="fab fa-instagram"></i></a>
-                <a href="https://wa.me/917907826147" target="_blank"><i class="fab fa-whatsapp"></i></a>
-            </div>
-            <div class="copyright">&copy; 2026 DESIGNQTEE STUDIO | CREATED BY AMEEN</div>
-        </footer>
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-box" id="modalBox">
+            <h2 style="color:var(--gold); margin-bottom:25px; font-family:'Playfair Display';">PREVIEW DESIGN</h2>
+            <button class="btn" style="background:var(--gold); color:#000;" id="goFull">FULL SCREEN</button>
+            <button class="btn" style="background:transparent; color:#fff; border:1px solid var(--border);" onclick="closeModal()">DISMISS</button>
+        </div>
+    </div>
+
+    <div class="fs-view" id="fsView">
+        <span class="fs-x" onclick="closeFS()">&times;</span>
+        <img src="" id="fsImg">
     </div>
 
     <script>
-        // PRELOADER LOGIC
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                const loader = document.getElementById('preloader');
-                loader.style.opacity = '0';
-                setTimeout(() => loader.remove(), 1000);
-            }, 2500); // 2.5 seconds loading time
+        // Preloader
+        window.addEventListener("load", () => {
+            const loader = document.getElementById("loader-wrapper");
+            setTimeout(() => { loader.classList.add("loader-hidden"); }, 1200);
         });
 
-        // MENU
+        // Menu Toggle (Hamburger to X)
+        const menuBtn = document.getElementById('menuToggle');
+        const navOverlay = document.getElementById('navOverlay');
+
+        menuBtn.addEventListener('click', toggleMenu);
+
         function toggleMenu() {
-            const nav = document.getElementById('navOverlay');
-            nav.classList.toggle('open');
-            document.body.style.overflow = nav.classList.contains('open') ? 'hidden' : 'auto';
+            menuBtn.classList.toggle('open');
+            navOverlay.classList.toggle('open');
+            document.body.style.overflow = navOverlay.classList.contains('open') ? 'hidden' : 'auto';
         }
 
-        // MODAL LOGIC
-        let currentImgSrc = "";
-
-        function showPremiumConfirm(src) {
-            currentImgSrc = src;
-            const overlay = document.getElementById('confirmModal');
-            const modal = document.getElementById('modalBox');
-            overlay.style.display = 'flex';
-            setTimeout(() => modal.classList.add('show'), 10);
-            document.body.style.overflow = 'hidden';
+        // Image Handling
+        let currentImg = "";
+        function askView(src) {
+            currentImg = src;
+            document.getElementById('modalOverlay').style.display = 'flex';
+            setTimeout(() => document.getElementById('modalBox').classList.add('active'), 10);
         }
-
         function closeModal() {
-            const modal = document.getElementById('modalBox');
-            modal.classList.remove('show');
-            setTimeout(() => {
-                document.getElementById('confirmModal').style.display = 'none';
-                document.body.style.overflow = 'auto';
-            }, 300);
+            document.getElementById('modalBox').classList.remove('active');
+            setTimeout(() => document.getElementById('modalOverlay').style.display = 'none', 400);
         }
-
-        document.getElementById('confirmOk').onclick = function() {
+        document.getElementById('goFull').onclick = () => {
             closeModal();
-            setTimeout(() => {
-                const fsOverlay = document.getElementById('imageOverlay');
-                const fullImg = document.getElementById('fullImage');
-                fullImg.src = currentImgSrc;
-                fsOverlay.style.display = 'flex';
-                document.body.style.overflow = 'hidden';
-            }, 350);
-        };
-
-        function closeFS() {
-            document.getElementById('imageOverlay').style.display = 'none';
-            document.body.style.overflow = 'auto';
+            document.getElementById('fsImg').src = currentImg;
+            document.getElementById('fsView').style.display = 'flex';
         }
+        function closeFS() { document.getElementById('fsView').style.display = 'none'; }
 
-        // WHATSAPP
-        function sendToWhatsApp() {
-            const comment = document.getElementById('userComment').value;
-            if(!comment.trim()) return alert("Please enter your message.");
-            window.open(`https://wa.me/917907826147?text=${encodeURIComponent("Project Inquiry: " + comment)}`, '_blank');
-        }
-
-        // REVEAL ANIMATION
+        // Intersection Observer
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
         }, { threshold: 0.1 });
