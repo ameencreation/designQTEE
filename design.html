@@ -28,35 +28,31 @@
             overflow-x: hidden; 
         }
 
-        /* --- BACKGROUND --- */
+        /* --- BACKGROUND WITH NEW FAST SEAMLESS DIAGONAL LINES --- */
         .bg-wrapper {
             position: fixed; inset: 0; z-index: -1;
-            background: linear-gradient(-45deg, #000000, #1a0033, #330066, #000000);
-            background-size: 400% 400%;
-            animation: gradientMove 10s ease infinite;
+            background: linear-gradient(-45deg, #000000, #1a0033, #000000);
         }
 
         .bg-lines {
-            position: absolute; inset: -100%;
-            background: repeating-linear-gradient(
-                45deg,
-                rgba(255, 255, 255, 0.12) 0px, 
-                rgba(255, 255, 255, 0.12) 1px,
+            position: absolute; inset: 0;
+            background-image: repeating-linear-gradient(
+                45deg, /* Diagonal 45-degree angle */
+                rgba(230, 190, 138, 0.08) 0px, 
+                rgba(230, 190, 138, 0.08) 1px,
                 transparent 1px,
-                transparent 40px
+                transparent 40px /* Spacing between lines */
             );
-            animation: linesMove 20s linear infinite;
+            background-size: 56.6px 56.6px; /* Optimized size for seamless 45deg loop */
+            animation: fastSeamlessLoop 1s linear infinite; /* Ultra fast and smooth loop */
         }
 
-        @keyframes gradientMove {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        @keyframes fastSeamlessLoop {
+            from { background-position: 0 0; }
+            to { background-position: 0 56.6px; } /* Seamless downward movement */
         }
 
-        @keyframes linesMove { from { transform: translateY(0); } to { transform: translateY(40px); } }
-
-        /* --- PRELOADER --- */
+        /* --- PREMIUM PRELOADER (PREVIOUS CREATIVE UPDATE) --- */
         #preloader {
             position: fixed; inset: 0; background: #000; z-index: 9999;
             display: flex; justify-content: center; align-items: center;
@@ -81,13 +77,21 @@
 
         .loader-logo {
             font-family: 'Playfair Display', serif;
-            font-size: 14px; color: var(--gold); letter-spacing: 4px; font-weight: 700; z-index: 2;
+            font-size: 14px; color: var(--gold); letter-spacing: 4px; font-weight: 700;
+            animation: logoShine 2s infinite linear;
+            z-index: 2;
         }
 
         @keyframes pulseExpand {
             0% { transform: scale(0.5); opacity: 0; }
             50% { opacity: 0.5; }
             100% { transform: scale(1.5); opacity: 0; }
+        }
+
+        @keyframes logoShine {
+            0% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.05); }
+            100% { opacity: 0.5; transform: scale(1); }
         }
 
         /* --- HEADER --- */
@@ -140,22 +144,22 @@
         .work-item img { width: 100%; height: 400px; object-fit: cover; transition: 0.8s; cursor: pointer; }
         .work-item:hover { transform: translateY(-10px); }
         
+        /* INQUIRY BUTTON: SOLID GOLD */
         .inquiry-btn { 
             display: block; padding: 20px; text-decoration: none; 
             color: #000; font-weight: 900; font-size: 13px; letter-spacing: 2px;
             text-transform: uppercase;
-            background: linear-gradient(90deg, #e6be8a, #ffffff, #e6be8a);
-            background-size: 200% auto;
-            animation: liveButton 3s infinite linear;
+            background: var(--gold);
+            transition: background 0.3s ease;
         }
+        .inquiry-btn:hover { background: #ffffff; }
 
         @keyframes liveBorder {
             0%, 100% { border-color: #e6be8a; box-shadow: 0 0 15px rgba(230,190,138,0.3); }
             50% { border-color: #ffffff; box-shadow: 0 0 30px rgba(255,255,255,0.4); }
         }
-        @keyframes liveButton { 0% { background-position: 0% center; } 100% { background-position: 200% center; } }
 
-        /* --- PREMIUM CUSTOM MODAL (CONFIRM BOX) --- */
+        /* --- CUSTOM MODAL --- */
         .custom-modal-overlay {
             position: fixed; inset: 0; background: rgba(0,0,0,0.85);
             display: none; justify-content: center; align-items: center;
@@ -178,8 +182,6 @@
         }
         .btn-ok { background: var(--gold); color: #000; }
         .btn-cancel { background: transparent; color: #fff; border: 1px solid var(--border); }
-        .btn-ok:hover { background: #fff; }
-        .btn-cancel:hover { background: rgba(255,255,255,0.1); }
 
         /* --- FULL SCREEN OVERLAY --- */
         .fs-overlay {
@@ -190,7 +192,7 @@
         .fs-overlay img { max-width: 95%; max-height: 90vh; border: 1px solid var(--gold); }
         .fs-close { position: absolute; top: 30px; right: 30px; color: var(--gold); font-size: 40px; cursor: pointer; }
 
-        /* --- FOOTER & REST --- */
+        /* --- FOOTER & COMMENTS --- */
         .comment-box { 
             background: rgba(255, 255, 255, 0.03); padding: 50px 30px; border-radius: 20px; 
             border: 1px solid var(--border); margin-top: 80px; text-align: left;
@@ -198,6 +200,7 @@
         }
         textarea { width: 100%; height: 120px; background: rgba(0,0,0,0.4); border: 1px solid var(--border); color: #fff; padding: 20px; border-radius: 12px; margin-bottom: 25px; outline: none; }
         .submit-btn { width: 100%; padding: 20px; background: var(--gold); border: none; font-weight: 800; cursor: pointer; border-radius: 12px; color: #000; }
+        
         footer { margin-top: 100px; padding-bottom: 50px; text-align: center; }
         .social-icons { display: flex; justify-content: center; gap: 40px; margin-bottom: 30px; }
         .social-icons a { color: var(--gold); font-size: 35px; text-decoration: none; }
@@ -252,7 +255,7 @@
     <div class="container">
         <div class="reveal">
             <h1 class="hero-title">DesignQTEE</h1>
-            <p style="font-family:'Cormorant Garamond'; font-style:italic; color:var(--gold); font-size: 22px; letter-spacing: 2px;">Elite Visual Craftsmanship</p>
+            <p style="font-family:'Inter', sans-serif; text-transform:uppercase; color:var(--gold); font-size: 14px; letter-spacing: 5px; font-weight:700;">ARRIVED THE RIGHT PLACE</p>
         </div>
 
         <div id="designs" class="work-grid">
@@ -290,13 +293,13 @@
     </div>
 
     <script>
-        // PRELOADER
+        // PRELOADER LOGIC
         window.addEventListener('load', () => {
             setTimeout(() => {
                 const loader = document.getElementById('preloader');
                 loader.style.opacity = '0';
                 setTimeout(() => loader.remove(), 1000);
-            }, 2500); 
+            }, 2500); // 2.5 seconds loading time
         });
 
         // MENU
@@ -306,7 +309,7 @@
             document.body.style.overflow = nav.classList.contains('open') ? 'hidden' : 'auto';
         }
 
-        // CUSTOM MODAL LOGIC
+        // MODAL LOGIC
         let currentImgSrc = "";
 
         function showPremiumConfirm(src) {
@@ -350,7 +353,7 @@
             window.open(`https://wa.me/917907826147?text=${encodeURIComponent("Project Inquiry: " + comment)}`, '_blank');
         }
 
-        // REVEAL
+        // REVEAL ANIMATION
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
         }, { threshold: 0.1 });
