@@ -5,53 +5,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>DesignQTEE | Elite Visual Studio</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Inter:wght@300;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Playfair+Display:wght@700;900&family=Inter:wght@300;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
             --bg: #000000; 
             --gold: #e6be8a; 
+            --purple: #1a0033; 
             --text: #ffffff;
-            --glass: rgba(255, 255, 255, 0.15); /* 15% Transparency */
+            --glass: rgba(255, 255, 255, 0.05); 
             --border: rgba(230, 190, 138, 0.2);
             --transition: cubic-bezier(0.23, 1, 0.32, 1);
-        }
-
-        body.light-mode {
-            --bg: #ffffff; 
-            --text: #1a1a1a; 
-            --glass: rgba(0, 0, 0, 0.08); 
-            --border: rgba(0, 0, 0, 0.1);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
 
         body { 
-            background: var(--bg); 
+            background: #000; 
             color: var(--text); 
             font-family: 'Inter', sans-serif; 
             overflow-x: hidden; 
-            transition: background 0.6s ease, color 0.6s ease;
         }
 
-        /* --- LIVE GRADIENT & 45° LINE BACKGROUND --- */
+        /* --- BACKGROUND WITH HIGH VISIBILITY LINES --- */
         .bg-wrapper {
-            position: fixed;
-            inset: 0;
-            z-index: -1;
-            background: linear-gradient(-45deg, #000000, #2b004d, #ffffff, #1a0033);
+            position: fixed; inset: 0; z-index: -1;
+            background: linear-gradient(-45deg, #000000, #1a0033, #330066, #000000);
             background-size: 400% 400%;
-            animation: gradientMove 15s ease infinite;
+            animation: gradientMove 10s ease infinite;
         }
 
         .bg-lines {
-            position: absolute;
-            inset: -100%;
+            position: absolute; inset: -100%;
             background: repeating-linear-gradient(
                 45deg,
-                rgba(125, 125, 125, 0.1) 0px,
-                rgba(125, 125, 125, 0.1) 1px,
+                rgba(255, 255, 255, 0.12) 0px, 
+                rgba(255, 255, 255, 0.12) 1px,
                 transparent 1px,
                 transparent 40px
             );
@@ -64,47 +54,49 @@
             100% { background-position: 0% 50%; }
         }
 
-        @keyframes linesMove {
-            from { transform: translateY(0); }
-            to { transform: translateY(40px); }
-        }
+        @keyframes linesMove { from { transform: translateY(0); } to { transform: translateY(40px); } }
 
-        /* --- PRELOADER --- */
+        /* --- ULTRA LUXURY PRELOADER --- */
         #preloader {
             position: fixed; inset: 0; background: #000; z-index: 9999;
             display: flex; justify-content: center; align-items: center;
-            transition: opacity 0.8s var(--transition);
+            flex-direction: column;
+            transition: opacity 1s var(--transition);
         }
 
-        .loader-container {
+        .loader-wrap {
             position: relative;
-            width: 240px; height: 240px;
+            width: 80px; height: 80px;
             display: flex; justify-content: center; align-items: center;
         }
 
-        .gold-ring {
-            width: 180px; height: 180px;
-            border: 12px solid var(--gold);
+        .pulse-ring {
+            position: absolute;
+            width: 100%; height: 100%;
+            border: 1px solid var(--gold);
             border-radius: 50%;
-            display: flex; justify-content: center; align-items: center;
+            animation: pulseExpand 2s infinite;
+            opacity: 0;
         }
 
-        .loader-brand { color: #fff; font-weight: 700; font-size: 16px; letter-spacing: 1px; }
+        .pulse-ring:nth-child(2) { animation-delay: 0.5s; }
+        .pulse-ring:nth-child(3) { animation-delay: 1s; }
 
-        .dot-orbit {
-            position: absolute; width: 100%; height: 100%;
-            animation: orbit 2.5s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+        .loader-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 14px;
+            color: var(--gold);
+            letter-spacing: 4px;
+            font-weight: 700;
+            z-index: 2;
+            text-shadow: 0 0 10px rgba(230, 190, 138, 0.5);
         }
 
-        .orbit-dot {
-            position: absolute; top: 15px; left: 50%;
-            transform: translateX(-50%);
-            width: 26px; height: 26px;
-            background-color: #fff; border-radius: 50%;
-            box-shadow: 0 0 20px var(--gold);
+        @keyframes pulseExpand {
+            0% { transform: scale(0.5); opacity: 0; }
+            50% { opacity: 0.5; }
+            100% { transform: scale(1.5); opacity: 0; }
         }
-
-        @keyframes orbit { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
         /* --- HEADER --- */
         header {
@@ -112,93 +104,85 @@
             display: flex; justify-content: space-between; align-items: center;
             z-index: 1100; backdrop-filter: blur(15px); border-bottom: 1px solid var(--border);
         }
+        .brand-name { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 900; color: var(--gold); text-decoration: none; letter-spacing: 1px; }
+        .menu-btn { cursor: pointer; display: flex; flex-direction: column; gap: 7px; }
+        .menu-btn span { width: 28px; height: 2px; background: var(--gold); transition: 0.3s; }
 
-        .theme-toggle {
-            display: flex; align-items: center; gap: 8px; cursor: pointer;
-            padding: 8px 15px; border: 1px solid var(--border); border-radius: 30px;
-        }
-
-        .menu-btn { cursor: pointer; display: flex; flex-direction: column; gap: 6px; z-index: 1101; }
-        .menu-btn span { width: 25px; height: 1px; background: var(--gold); transition: 0.3s; }
-
-        /* --- GLASSY NAV OVERLAY --- */
+        /* --- NAV OVERLAY --- */
         .nav-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.15); /* 15% Transparency */
-            backdrop-filter: blur(25px); /* Strong glassy blur */
-            -webkit-backdrop-filter: blur(25px);
-            z-index: 1050;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            clip-path: circle(0% at 90% 5%);
-            transition: 0.8s var(--transition);
+            position: fixed; inset: 0; z-index: 1050;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            clip-path: circle(0% at 90% 5%); transition: 0.8s var(--transition);
+            background: rgba(0, 0, 0, 0.98); backdrop-filter: blur(25px);
         }
-        
         .nav-overlay.open { clip-path: circle(150% at 90% 5%); }
-
-        .nav-overlay a { 
-            text-decoration: none; 
-            color: var(--text); 
-            font-size: clamp(30px, 8vw, 50px); 
-            margin: 15px 0; 
-            font-family: 'Cormorant Garamond';
-            transition: 0.3s;
-            letter-spacing: 2px;
-        }
-
-        .nav-overlay a:hover { color: var(--gold); letter-spacing: 6px; }
+        .nav-overlay a { text-decoration: none; color: #fff; font-size: 38px; margin: 15px 0; font-family: 'Cormorant Garamond'; letter-spacing: 2px; transition: 0.3s; }
+        .nav-overlay a:hover { color: var(--gold); letter-spacing: 5px; }
 
         /* --- MAIN CONTENT --- */
-        .container { max-width: 600px; margin: 0 auto; padding: 150px 25px 50px; text-align: center; }
+        .container { max-width: 900px; margin: 0 auto; padding: 180px 20px 50px; text-align: center; }
 
         .hero-title { 
-            font-family: 'Cormorant Garamond', serif; font-size: clamp(50px, 10vw, 80px);
-            background: linear-gradient(90deg, var(--text), var(--gold), var(--text));
-            background-size: 200%; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            animation: shine 4s linear infinite;
+            font-family: 'Playfair Display', serif; font-size: clamp(55px, 12vw, 90px);
+            background: linear-gradient(90deg, #b8860b, #fff, #b8860b);
+            background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            animation: shine 3s linear infinite; margin-bottom: 10px;
+            font-weight: 900;
+        }
+        @keyframes shine { to { background-position: 200% center; } }
+
+        /* --- WORK GRID - UPDATED FOR 4 IMAGES --- */
+        .work-grid { margin: 80px 0; display: grid; grid-template-columns: 1fr; gap: 60px; }
+        
+        /* Tablet/Desktop-ൽ രണ്ട് ഫോട്ടോകൾ വശങ്ങളിൽ വരാൻ */
+        @media (min-width: 768px) {
+            .work-grid { grid-template-columns: 1fr 1fr; gap: 30px; }
         }
 
-        .work-grid { margin: 60px 0; display: flex; flex-direction: column; gap: 40px; }
-        .work-item { border-radius: 8px; overflow: hidden; border: 1px solid var(--border); background: var(--glass); }
-        .work-item img { width: 100%; height: 450px; object-fit: cover; }
-        .inquiry-btn { display: block; padding: 20px; text-decoration: none; background: var(--gold); color: #000; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; }
+        .work-item { 
+            position: relative; border-radius: 12px; overflow: hidden; 
+            background: var(--glass); border: 2px solid var(--gold);
+            animation: liveBorder 4s infinite ease-in-out;
+            transition: 0.6s var(--transition);
+            display: flex; flex-direction: column;
+        }
+        .work-item img { width: 100%; height: 400px; object-fit: cover; transition: 0.8s; }
+        .work-item:hover { transform: translateY(-10px); }
+        
+        .inquiry-btn { 
+            display: block; padding: 20px; text-decoration: none; 
+            color: #000; font-weight: 900; font-size: 13px; letter-spacing: 2px;
+            text-transform: uppercase;
+            background: linear-gradient(90deg, #e6be8a, #ffffff, #e6be8a);
+            background-size: 200% auto;
+            animation: liveButton 3s infinite linear;
+        }
 
-        /* --- GLASSY COMMENT BOX --- */
+        @keyframes liveBorder {
+            0%, 100% { border-color: #e6be8a; box-shadow: 0 0 15px rgba(230,190,138,0.3); }
+            50% { border-color: #ffffff; box-shadow: 0 0 30px rgba(255,255,255,0.4); }
+        }
+        @keyframes liveButton { 0% { background-position: 0% center; } 100% { background-position: 200% center; } }
+
+        /* --- COMMENT BOX --- */
         .comment-box { 
-            background: rgba(255, 255, 255, 0.15); 
-            backdrop-filter: blur(20px); 
-            -webkit-backdrop-filter: blur(20px);
-            padding: 40px; border-radius: 15px; 
-            border: 1px solid rgba(255, 255, 255, 0.1); 
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
-            text-align: left;
-            margin-top: 40px;
+            background: rgba(255, 255, 255, 0.03); padding: 50px 30px; border-radius: 20px; 
+            border: 1px solid var(--border); margin-top: 80px; text-align: left;
+            backdrop-filter: blur(15px); max-width: 800px; margin-left: auto; margin-right: auto;
         }
+        textarea { width: 100%; height: 120px; background: rgba(0,0,0,0.4); border: 1px solid var(--border); color: #fff; padding: 20px; border-radius: 12px; margin-bottom: 25px; outline: none; font-size: 16px; }
+        .submit-btn { width: 100%; padding: 20px; background: var(--gold); border: none; font-weight: 800; cursor: pointer; border-radius: 12px; color: #000; font-size: 15px; letter-spacing: 1px; transition: 0.3s; }
+        .submit-btn:hover { background: #fff; transform: scale(1.02); }
 
-        textarea {
-            width: 100%; height: 120px; 
-            background: rgba(0, 0, 0, 0.2); 
-            border: 1px solid var(--border); 
-            color: var(--text); padding: 15px;
-            margin: 20px 0; outline: none; border-radius: 8px;
-        }
+        /* --- FOOTER --- */
+        footer { margin-top: 100px; padding-bottom: 50px; text-align: center; }
+        .social-icons { display: flex; justify-content: center; gap: 40px; margin-bottom: 30px; }
+        .social-icons a { color: var(--gold); font-size: 35px; text-decoration: none; transition: 0.4s; }
+        .social-icons a:hover { transform: scale(1.3) translateY(-5px); color: #fff; text-shadow: 0 0 20px var(--gold); }
+        .copyright { opacity: 0.5; font-size: 11px; letter-spacing: 3px; font-weight: 300; }
 
-        .submit-btn {
-            width: 100%; padding: 18px; 
-            background: rgba(230, 190, 138, 0.1); 
-            backdrop-filter: blur(5px);
-            border: 1px solid var(--gold); color: var(--gold); 
-            font-weight: 700; cursor: pointer; transition: 0.4s; border-radius: 8px;
-        }
-        .submit-btn:hover { background: var(--gold); color: #000; box-shadow: 0 0 20px rgba(230, 190, 138, 0.4); }
-
-        .reveal { opacity: 0; transform: translateY(40px); transition: 1s var(--transition); }
+        .reveal { opacity: 0; transform: translateY(40px); transition: 1.2s var(--transition); }
         .reveal.active { opacity: 1; transform: translateY(0); }
-
-        footer { margin-top: 80px; font-size: 10px; letter-spacing: 3px; opacity: 0.4; }
     </style>
 </head>
 <body>
@@ -208,23 +192,18 @@
     </div>
 
     <div id="preloader">
-        <div class="loader-container">
-            <div class="gold-ring">
-                <div class="loader-brand">DesignQTEE<span>.in</span></div>
-            </div>
-            <div class="dot-orbit">
-                <div class="orbit-dot"></div>
-            </div>
+        <div class="loader-wrap">
+            <div class="pulse-ring"></div>
+            <div class="pulse-ring"></div>
+            <div class="pulse-ring"></div>
+            <div class="loader-logo">QTEE</div>
         </div>
     </div>
 
     <header>
-        <div class="theme-toggle" onclick="toggleTheme()">
-            <i id="themeIcon" class="fas fa-moon"></i>
-            <span id="modeText" style="color:var(--gold); font-size: 10px; font-weight:700;">DARK</span>
-        </div>
+        <a href="#" class="brand-name">DesignQTEE</a>
         <div class="menu-btn" onclick="toggleMenu()">
-            <span></span><span style="margin: 6px 0;"></span><span></span>
+            <span></span><span style="margin: 7px 0;"></span><span></span>
         </div>
     </header>
 
@@ -232,33 +211,47 @@
         <a href="#designs" onclick="toggleMenu()">PORTFOLIO</a>
         <a href="https://wa.me/917907826147" target="_blank">CONTACT</a>
         <a href="#more-info" onclick="toggleMenu()">LEAVE MESSAGE</a>
-        <div style="margin-top: 40px; color: var(--gold); cursor: pointer; font-weight: 700; letter-spacing: 2px;" onclick="toggleMenu()">CLOSE</div>
+        <p style="color:var(--gold); margin-top:50px; cursor:pointer; letter-spacing: 2px;" onclick="toggleMenu()">[ CLOSE ]</p>
     </nav>
 
     <div class="container">
         <div class="reveal">
             <h1 class="hero-title">DesignQTEE</h1>
-            <p style="font-family:'Cormorant Garamond'; font-style:italic; color:var(--gold); margin-top:10px;">Premium Visual Craftsmanship</p>
+            <p style="font-family:'Cormorant Garamond'; font-style:italic; color:var(--gold); font-size: 22px; letter-spacing: 2px;">Elite Visual Craftsmanship</p>
         </div>
 
         <div id="designs" class="work-grid">
             <div class="work-item reveal">
-                <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800" alt="Design 1">
+                <img src="image1.png" alt="Design 1">
                 <a href="https://wa.me/917907826147" class="inquiry-btn">Enquire Now</a>
             </div>
             <div class="work-item reveal">
-                <img src="https://images.unsplash.com/photo-1634157703702-3c124b455499?w=800" alt="Design 2">
+                <img src="image2.png" alt="Design 2">
+                <a href="https://wa.me/917907826147" class="inquiry-btn">Enquire Now</a>
+            </div>
+            <div class="work-item reveal">
+                <img src="image3.png" alt="Design 3">
+                <a href="https://wa.me/917907826147" class="inquiry-btn">Enquire Now</a>
+            </div>
+            <div class="work-item reveal">
+                <img src="image4.png" alt="Design 4">
                 <a href="https://wa.me/917907826147" class="inquiry-btn">Enquire Now</a>
             </div>
         </div>
 
         <div id="more-info" class="comment-box reveal">
-            <h3 style="font-family: 'Cormorant Garamond'; font-size: 28px;">Start a Project</h3>
-            <textarea id="userComment" placeholder="Describe your vision..."></textarea>
+            <h3 style="color:var(--gold); margin-bottom:20px; font-family:'Playfair Display'; font-size: 32px;">Start Your Vision</h3>
+            <textarea id="userComment" placeholder="Tell us about your project..."></textarea>
             <button class="submit-btn" onclick="sendToWhatsApp()">SEND VIA WHATSAPP</button>
         </div>
 
-        <footer class="reveal">&copy; 2026 DESIGNQTEE STUDIO | CREATED BY AMEEN</footer>
+        <footer>
+            <div class="social-icons reveal">
+                <a href="https://www.instagram.com/DesignQTEE" target="_blank"><i class="fab fa-instagram"></i></a>
+                <a href="https://wa.me/917907826147" target="_blank"><i class="fab fa-whatsapp"></i></a>
+            </div>
+            <div class="copyright">&copy; 2026 DESIGNQTEE STUDIO | CREATED BY AMEEN</div>
+        </footer>
     </div>
 
     <script>
@@ -266,16 +259,9 @@
             setTimeout(() => {
                 const loader = document.getElementById('preloader');
                 loader.style.opacity = '0';
-                setTimeout(() => loader.remove(), 800);
-            }, 3000); 
+                setTimeout(() => loader.remove(), 1000);
+            }, 2500); 
         });
-
-        function toggleTheme() {
-            document.body.classList.toggle('light-mode');
-            const isLight = document.body.classList.contains('light-mode');
-            document.getElementById('themeIcon').className = isLight ? 'fas fa-sun' : 'fas fa-moon';
-            document.getElementById('modeText').innerText = isLight ? 'LIGHT' : 'DARK';
-        }
 
         function toggleMenu() {
             const nav = document.getElementById('navOverlay');
@@ -285,8 +271,8 @@
 
         function sendToWhatsApp() {
             const comment = document.getElementById('userComment').value;
-            if(!comment.trim()) return alert("Please type something.");
-            window.open(`https://wa.me/917907826147?text=${encodeURIComponent("Inquiry: " + comment)}`, '_blank');
+            if(!comment.trim()) return alert("Please enter your message.");
+            window.open(`https://wa.me/917907826147?text=${encodeURIComponent("Project Inquiry: " + comment)}`, '_blank');
         }
 
         const observer = new IntersectionObserver((entries) => {
