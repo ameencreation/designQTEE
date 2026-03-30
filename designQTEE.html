@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>DesignQTEE | Elite Visual Studio</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Inter:wght@300;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Inter:wght@300;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
@@ -13,259 +13,248 @@
             --bg: #000000; 
             --gold: #e6be8a; 
             --text: #ffffff;
-            --glass: rgba(255, 255, 255, 0.05);
+            --glass: rgba(255, 255, 255, 0.03);
             --border: rgba(230, 190, 138, 0.2);
-            --transition: cubic-bezier(0.22, 1, 0.36, 1);
+            --transition: cubic-bezier(0.23, 1, 0.32, 1);
         }
 
         body.light-mode {
-            --bg: #ffffff; --text: #000000; --glass: rgba(0, 0, 0, 0.05); --border: rgba(0, 0, 0, 0.1);
+            --bg: #ffffff; 
+            --text: #1a1a1a; 
+            --glass: rgba(0, 0, 0, 0.03); 
+            --border: rgba(0, 0, 0, 0.1);
         }
-
-        /* --- PRELOADER STYLES (Updated to 5s) --- */
-        #preloader {
-            position: fixed;
-            inset: 0;
-            background: var(--bg);
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            transition: opacity 0.8s ease, visibility 0.8s;
-        }
-
-        .loader {
-            width: 60px;
-            aspect-ratio: 1;
-            display: grid;
-            border: 4px solid #0000;
-            border-radius: 50%;
-            border-right-color: var(--gold);
-            /* Main rotation slowed to 5s */
-            animation: l15 5s infinite linear;
-        }
-        .loader::before,
-        .loader::after {    
-            content: "";
-            grid-area: 1/1;
-            margin: 2px;
-            border: inherit;
-            border-radius: 50%;
-            /* Inner ring slowed to 10s */
-            animation: l15 10s infinite;
-        }
-        .loader::after {
-            margin: 8px;
-            /* Outermost ring slowed to 15s */
-            animation-duration: 15s;
-        }
-        @keyframes l15{ 
-            100%{transform: rotate(1turn)}
-        }
-
-        .loading-text {
-            margin-top: 20px;
-            font-family: 'Cormorant Garamond', serif;
-            color: var(--gold);
-            letter-spacing: 4px;
-            font-size: 12px;
-            text-transform: uppercase;
-            /* Gentle pulse to match the slow spin */
-            animation: pulse 2.5s ease-in-out infinite;
-        }
-        @keyframes pulse {
-            0%, 100% { opacity: 0.5; }
-            50% { opacity: 1; }
-        }
-        /* --- END PRELOADER --- */
 
         * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
-        body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; overflow-x: hidden; transition: 0.5s; }
 
-        .live-brand-anim {
-            font-family: 'Cormorant Garamond', serif;
-            font-weight: 700;
-            background: linear-gradient(to right, #000 10%, #fff 30%, var(--gold) 50%, #fff 70%, #000 90%);
-            background-size: 200% auto;
-            background-clip: text;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: shine 5s linear infinite;
+        body { 
+            background: var(--bg); 
+            color: var(--text); 
+            font-family: 'Inter', sans-serif; 
+            overflow-x: hidden; 
+            transition: background 0.6s ease, color 0.6s ease;
+            cursor: crosshair;
         }
 
-        @keyframes shine { to { background-position: 200% center; } }
+        /* --- CLICK RIPPLE ANIMATION --- */
+        .ripple {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: var(--gold);
+            border-radius: 50%;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            animation: ripple-effect 0.7s var(--transition) forwards;
+            z-index: 10000;
+            opacity: 0.6;
+        }
+        @keyframes ripple-effect {
+            to { width: 120px; height: 120px; opacity: 0; }
+        }
 
+        /* --- PRELOADER --- */
+        #preloader {
+            position: fixed; inset: 0; background: var(--bg); z-index: 9999;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+        }
+        .loader {
+            width: 50px; height: 50px; border: 2px solid var(--glass);
+            border-top: 2px solid var(--gold); border-radius: 50%;
+            animation: spin 1.5s linear infinite;
+        }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        /* --- NAVIGATION --- */
         header {
-            position: fixed; top: 0; width: 100%; padding: 20px 25px;
+            position: fixed; top: 0; width: 100%; padding: 25px 30px;
             display: flex; justify-content: space-between; align-items: center;
-            z-index: 1000; backdrop-filter: blur(20px); border-bottom: 1px solid var(--border);
+            z-index: 1000; backdrop-filter: blur(15px); border-bottom: 1px solid var(--border);
         }
 
-        .menu-btn { cursor: pointer; z-index: 1100; }
-        .menu-btn div { width: 25px; height: 1px; background: var(--gold); margin: 6px 0; transition: 0.4s; }
+        .theme-toggle {
+            display: flex; align-items: center; gap: 8px; cursor: pointer;
+            padding: 8px 15px; border: 1px solid var(--border); border-radius: 30px;
+        }
+        .theme-toggle i { color: var(--gold); font-size: 14px; transition: 0.4s; }
+        .theme-toggle span { font-size: 10px; font-weight: 700; letter-spacing: 1px; color: var(--gold); }
+
+        .menu-btn { cursor: pointer; display: flex; flex-direction: column; gap: 6px; }
+        .menu-btn span { width: 25px; height: 1px; background: var(--gold); transition: 0.4s; }
 
         .nav-overlay {
             position: fixed; inset: 0; background: var(--bg); z-index: 1050;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            opacity: 0; visibility: hidden; transition: 0.5s var(--transition);
+            clip-path: circle(0% at 90% 5%); transition: 0.8s var(--transition);
         }
-        .nav-overlay.open { opacity: 1; visibility: visible; }
+        .nav-overlay.open { clip-path: circle(150% at 90% 5%); }
         .nav-overlay a { 
-            text-decoration: none; color: var(--text); font-size: 32px; 
-            font-family: 'Cormorant Garamond', serif; margin: 12px 0; 
-            letter-spacing: 2px; transition: 0.3s; opacity: 0; transform: translateY(20px);
+            text-decoration: none; color: var(--text); font-size: clamp(30px, 8vw, 50px);
+            font-family: 'Cormorant Garamond', serif; margin: 15px 0; transition: 0.3s;
         }
-        .nav-overlay.open a { opacity: 1; transform: translateY(0); transition: 0.6s; }
+        .nav-overlay a:hover { color: var(--gold); letter-spacing: 4px; }
 
-        .container { max-width: 500px; margin: 0 auto; padding: 120px 20px; text-align: center; }
-        .reveal { opacity: 0; transform: translateY(30px); transition: 1s var(--transition); }
-        .reveal.active { opacity: 1; transform: translateY(0); }
+        /* --- CONTENT --- */
+        .container { max-width: 600px; margin: 0 auto; padding: 150px 25px 50px; text-align: center; }
 
-        .hero-title { font-size: 60px; line-height: 1; }
-        .slogan { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 20px; color: var(--gold); margin: 10px 0; }
-
-        .work-grid { display: flex; flex-direction: column; gap: 25px; margin: 40px 0; }
-        .work-item { border-radius: 8px; overflow: hidden; border: 1px solid var(--border); background: var(--glass); }
-        .work-item img { width: 100%; height: 350px; object-fit: cover; }
-
-        .comment-box { 
-            background: var(--glass); padding: 25px; border-radius: 12px; 
-            border: 1px solid var(--border); margin-top: 50px; text-align: left;
+        .hero-title { 
+            font-family: 'Cormorant Garamond', serif; font-size: clamp(50px, 10vw, 80px);
+            background: linear-gradient(90deg, var(--text), var(--gold), var(--text));
+            background-size: 200%; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            animation: shine 4s linear infinite; line-height: 1;
         }
-        .comment-box textarea {
-            width: 100%; height: 100px; background: rgba(255,255,255,0.05);
-            border: 1px solid var(--border); color: white; padding: 10px;
-            font-family: 'Inter'; border-radius: 5px; outline: none; margin-top: 10px;
-        }
-        .submit-btn {
-            background: var(--gold); color: black; border: none; padding: 12px 20px;
-            width: 100%; margin-top: 10px; font-weight: 700; cursor: pointer; border-radius: 5px;
-        }
+        @keyframes shine { to { background-position: 200% center; } }
 
-        #about-content { display: none; padding: 20px; font-size: 18px; line-height: 1.6; }
-        .highlight-red { color: #ff4d4d; font-weight: bold; }
+        .slogan { font-family: 'Cormorant Garamond', serif; font-style: italic; color: var(--gold); margin-top: 10px; opacity: 0.8; }
+
+        .work-grid { margin: 60px 0; display: flex; flex-direction: column; gap: 40px; }
+        .work-item { 
+            position: relative; border-radius: 4px; overflow: hidden; 
+            border: 1px solid var(--border); background: var(--glass);
+        }
+        .work-item img { width: 100%; height: 450px; object-fit: cover; transition: 0.6s; }
+        .work-item:hover img { transform: scale(1.05); filter: brightness(0.7); }
 
         .inquiry-btn {
-            display: block; width: 100%; padding: 15px; text-decoration: none; 
-            font-weight: 700; font-size: 11px; letter-spacing: 2px; 
-            text-transform: uppercase; color: #000;
-            background: linear-gradient(270deg, var(--gold), #ffffff, var(--gold));
-            background-size: 200% 200%; animation: buttonShimmer 3s ease infinite;
+            display: block; width: 100%; padding: 20px; text-decoration: none;
+            background: var(--gold); color: #000; font-weight: 700; font-size: 11px;
+            letter-spacing: 2px; text-transform: uppercase; transition: 0.3s;
         }
-        @keyframes buttonShimmer { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        .inquiry-btn:hover { background: #fff; }
 
-        footer { margin-top: 60px; font-size: 10px; opacity: 0.5; letter-spacing: 2px; }
+        .comment-box { 
+            background: var(--glass); padding: 30px; border-radius: 4px; 
+            border: 1px solid var(--border); text-align: left;
+        }
+        textarea {
+            width: 100%; height: 120px; background: rgba(125,125,125,0.1);
+            border: 1px solid var(--border); color: var(--text); padding: 15px;
+            margin: 20px 0; outline: none; font-family: 'Inter'; border-radius: 4px;
+        }
+        .submit-btn {
+            width: 100%; padding: 15px; background: none; border: 1px solid var(--gold);
+            color: var(--gold); font-weight: 700; cursor: pointer; transition: 0.3s;
+        }
+        .submit-btn:hover { background: var(--gold); color: #000; }
+
+        .reveal { opacity: 0; transform: translateY(40px); transition: 1s var(--transition); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        footer { margin-top: 80px; font-size: 10px; letter-spacing: 3px; opacity: 0.4; }
     </style>
 </head>
-<body id="home">
+<body>
 
     <div id="preloader">
         <div class="loader"></div>
-        <div class="loading-text">DesignQTEE</div>
     </div>
 
     <header>
-        <div class="theme-switch" onclick="toggleTheme()">
-            <div class="toggle-icon"></div>
-            <span id="modeText" style="font-size: 10px; color: var(--gold);">DARK</span>
+        <div class="theme-toggle" onclick="toggleTheme()">
+            <i id="themeIcon" class="fas fa-moon"></i>
+            <span id="modeText">DARK</span>
         </div>
-        <div class="menu-btn" id="menuBtn">
-            <div class="l1"></div><div class="l2"></div><div class="l3"></div>
+        <div class="menu-btn" id="menuBtn" onclick="toggleMenu()">
+            <span></span><span></span><span></span>
         </div>
     </header>
 
     <nav class="nav-overlay" id="navOverlay">
-        <h2 class="live-brand-anim" style="font-size: 45px; margin-bottom: 30px;">DesignQTEE</h2>
-        <a href="#designs" onclick="closeMenu()">DESIGNS</a>
-        <a href="#about" onclick="toggleAbout()">ABOUT US</a>
+        <a href="#designs" onclick="toggleMenu()">PORTFOLIO</a>
         <a href="https://wa.me/917907826147" target="_blank">CONTACT</a>
-        <a href="#more-info" onclick="closeMenu()">MORE INFO</a>
-        <a href="#" onclick="closeMenu()" style="font-size: 14px; color: var(--gold); margin-top: 20px;">CLOSE [X]</a>
-        
-        <div id="about-content">
-            <p>This Website is for providing <span class="highlight-red">Unique</span> and Precise Poster Designs for you.</p>
-        </div>
+        <a href="#more-info" onclick="toggleMenu()">LEAVE MESSAGE</a>
+        <div style="margin-top: 40px; color: var(--gold); cursor: pointer;" onclick="toggleMenu()">[ CLOSE ]</div>
     </nav>
 
     <div class="container">
         <div class="reveal">
-            <h1 class="hero-title live-brand-anim">DesignQTEE</h1>
-            <p class="slogan">"You Arrived at the Right Place"</p>
+            <h1 class="hero-title">DesignQTEE</h1>
+            <p class="slogan">Premium Visual Craftsmanship</p>
         </div>
 
         <div id="designs" class="work-grid">
             <div class="work-item reveal">
-                <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600" alt="Work 1">
+                <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800" alt="Design 1">
                 <a href="https://wa.me/917907826147" class="inquiry-btn">Enquire Now</a>
             </div>
             <div class="work-item reveal">
-                <img src="https://images.unsplash.com/photo-1634157703702-3c124b455499?w=600" alt="Work 2">
+                <img src="https://images.unsplash.com/photo-1634157703702-3c124b455499?w=800" alt="Design 2">
                 <a href="https://wa.me/917907826147" class="inquiry-btn">Enquire Now</a>
             </div>
         </div>
 
         <div id="more-info" class="comment-box reveal">
-            <h3 style="font-family: 'Cormorant Garamond'; font-size: 24px; color: var(--gold);">Leave a Comment</h3>
-            <p style="font-size: 12px; opacity: 0.7;">Tell us what you think or ask for a custom design.</p>
-            <textarea id="userComment" placeholder="Write your message here..."></textarea>
-            <button class="submit-btn" onclick="sendToWhatsApp()">SUBMIT TO WHATSAPP</button>
+            <h3 style="font-family: 'Cormorant Garamond'; font-size: 28px;">Start a Project</h3>
+            <textarea id="userComment" placeholder="Describe your vision..."></textarea>
+            <button class="submit-btn" onclick="sendToWhatsApp()">SEND VIA WHATSAPP</button>
         </div>
 
         <footer class="reveal">
-            &copy; 2026 DESIGNQTEE STUDIO | BY AMEEN
+            &copy; 2026 DESIGNQTEE STUDIO | CREATED BY AMEEN
         </footer>
     </div>
 
     <script>
-        // --- PRELOADER LOGIC ---
+        // --- CLICK RIPPLE ---
+        window.addEventListener('mousedown', (e) => {
+            const ripple = document.createElement('div');
+            ripple.className = 'ripple';
+            ripple.style.left = `${e.clientX}px`;
+            ripple.style.top = `${e.clientY}px`;
+            document.body.appendChild(ripple);
+            setTimeout(() => ripple.remove(), 700);
+        });
+
+        // --- PRELOADER ---
         window.addEventListener('load', () => {
-            const preloader = document.getElementById('preloader');
-            // Timeout updated to 5000ms (5 seconds)
             setTimeout(() => {
-                preloader.style.opacity = '0';
-                preloader.style.visibility = 'hidden';
-            }, 5000); 
+                const loader = document.getElementById('preloader');
+                loader.style.transition = '0.8s';
+                loader.style.opacity = '0';
+                setTimeout(() => loader.remove(), 800);
+            }, 1500);
         });
 
-        const menuBtn = document.getElementById('menuBtn');
-        const navOverlay = document.getElementById('navOverlay');
-        const aboutContent = document.getElementById('about-content');
-
-        // Menu Logic
-        menuBtn.addEventListener('click', () => {
-            navOverlay.classList.toggle('open');
-            document.body.style.overflow = navOverlay.classList.contains('open') ? 'hidden' : 'auto';
-        });
-
-        function closeMenu() {
-            navOverlay.classList.remove('open');
-            aboutContent.style.display = 'none';
-            document.body.style.overflow = 'auto';
-        }
-
-        function toggleAbout() {
-            aboutContent.style.display = aboutContent.style.display === 'block' ? 'none' : 'block';
-        }
-
+        // --- THEME TOGGLE ---
         function toggleTheme() {
-            document.body.classList.toggle('light-mode');
-            document.getElementById('modeText').innerText = document.body.classList.contains('light-mode') ? 'LIGHT' : 'DARK';
+            const body = document.body;
+            const icon = document.getElementById('themeIcon');
+            const text = document.getElementById('modeText');
+            
+            body.classList.toggle('light-mode');
+            const isLight = body.classList.contains('light-mode');
+            
+            icon.className = isLight ? 'fas fa-sun' : 'fas fa-moon';
+            text.innerText = isLight ? 'LIGHT' : 'DARK';
+            
+            // Animation for icon spin
+            icon.style.transform = 'rotate(360deg)';
+            setTimeout(() => icon.style.transform = 'rotate(0deg)', 400);
         }
 
+        // --- NAVIGATION ---
+        function toggleMenu() {
+            const nav = document.getElementById('navOverlay');
+            nav.classList.toggle('open');
+            document.body.style.overflow = nav.classList.contains('open') ? 'hidden' : 'auto';
+        }
+
+        // --- WHATSAPP LOGIC ---
         function sendToWhatsApp() {
             const comment = document.getElementById('userComment').value;
-            const phone = "917907826147";
-            if(comment.trim() === "") { alert("Please enter a comment"); return; }
-            const url = `https://wa.me/${phone}?text=${encodeURIComponent("New Inquiry: " + comment)}`;
+            if(!comment.trim()) return alert("Message cannot be empty.");
+            const url = `https://wa.me/917907826147?text=${encodeURIComponent("Inquiry: " + comment)}`;
             window.open(url, '_blank');
         }
 
+        // --- REVEAL ON SCROLL ---
         const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('active');
+            });
         }, { threshold: 0.1 });
+
         document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
     </script>
 </body>
 </html>
-
