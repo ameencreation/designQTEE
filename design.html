@@ -10,8 +10,8 @@
     
     <style>
         :root {
-            --bg-black: #000000;
-            --bg-purple: #1a0033; 
+            --bg-black: #050505;
+            --bg-purple: #120026; 
             --gold: #e6be8a; 
             --text: #ffffff;
             --border: rgba(230, 190, 138, 0.15);
@@ -34,122 +34,117 @@
             box-shadow: -10px -10px 10px #6359f8, 0px -10px 10px 0px #9c32e2, 10px -10px 10px #f36896, 10px 0 10px #ff0b0b, 10px 10px 10px 0px#ff5500, 0 10px 10px 0px #ff9500, -10px 10px 10px 0px #ffb700;
             animation: rot55 0.7s linear infinite; position: relative;
         }
-        .spinnerin { border: 2px solid #444; width: 1.5em; height: 1.5em; border-radius: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
         @keyframes rot55 { to { transform: rotate(360deg); } }
         .loader-hidden { opacity: 0; visibility: hidden; }
 
-        /* --- BACKGROUND 45° LINES --- */
+        /* --- BACKGROUND DYNAMICS --- */
         .bg-wrapper { 
             position: fixed; inset: 0; z-index: -1; 
-            background: linear-gradient(135deg, var(--bg-black), var(--bg-purple), var(--bg-black));
-            background-size: 400% 400%; animation: gradientShift 15s ease infinite; overflow: hidden; 
+            background: radial-gradient(circle at center, var(--bg-purple) 0%, var(--bg-black) 100%);
+            overflow: hidden; 
         }
-        @keyframes gradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
         .bg-lines {
             position: absolute; width: 300%; height: 300%; top: -100%; left: -150%;
-            background-image: linear-gradient(rgba(230, 190, 138, 0.08) 1.5px, transparent 1.5px);
-            background-size: 100% 60px; transform: rotate(45deg); animation: moveLines 5s linear infinite; 
+            background-image: linear-gradient(rgba(230, 190, 138, 0.05) 1px, transparent 1px);
+            background-size: 100% 50px; transform: rotate(45deg); animation: moveLines 8s linear infinite; 
         }
-        @keyframes moveLines { from { transform: rotate(45deg) translateY(0); } to { transform: rotate(45deg) translateY(60px); } }
+        @keyframes moveLines { from { transform: rotate(45deg) translateY(0); } to { transform: rotate(45deg) translateY(50px); } }
 
-        /* --- HEADER & HAMBURGER TO CLOSE --- */
-        header { position: fixed; top: 0; width: 100%; padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; z-index: 3000; backdrop-filter: blur(15px); border-bottom: 1px solid var(--border); }
-        .brand-name { font-family: 'Playfair Display'; font-size: 24px; font-weight: 900; color: var(--gold); text-decoration: none; letter-spacing: 2px; }
+        /* --- NAVIGATION --- */
+        header { position: fixed; top: 0; width: 100%; padding: 25px 40px; display: flex; justify-content: space-between; align-items: center; z-index: 3000; backdrop-filter: blur(15px); border-bottom: 1px solid var(--border); }
+        .brand-name { font-family: 'Playfair Display'; font-size: 26px; font-weight: 900; color: var(--gold); text-decoration: none; letter-spacing: 2px; }
         
-        .menu-btn { cursor: pointer; z-index: 3100; width: 35px; height: 25px; position: relative; }
-        .menu-btn span { display: block; position: absolute; height: 2px; width: 100%; background: var(--gold); transition: .3s ease-in-out; }
-        .menu-btn span:nth-child(1) { top: 0px; }
-        .menu-btn span:nth-child(2) { top: 10px; }
-        .menu-btn span:nth-child(3) { top: 20px; }
+        .menu-btn { cursor: pointer; z-index: 3100; width: 30px; height: 20px; position: relative; }
+        .menu-btn span { display: block; position: absolute; height: 2px; width: 100%; background: var(--gold); transition: .4s var(--transition); }
+        .menu-btn span:nth-child(1) { top: 0; }
+        .menu-btn span:nth-child(2) { top: 9px; }
+        .menu-btn span:nth-child(3) { top: 18px; }
+        .menu-btn.open span:nth-child(1) { transform: translateY(9px) rotate(45deg); }
+        .menu-btn.open span:nth-child(2) { opacity: 0; }
+        .menu-btn.open span:nth-child(3) { transform: translateY(-9px) rotate(-45deg); }
 
-        /* Transform to 'X' Close */
-        .menu-btn.open span:nth-child(1) { top: 10px; transform: rotate(135deg); }
-        .menu-btn.open span:nth-child(2) { opacity: 0; left: -60px; }
-        .menu-btn.open span:nth-child(3) { top: 10px; transform: rotate(-135deg); }
-
-        /* --- CIRCULAR NAV OVERLAY --- */
         .nav-overlay { 
-            position: fixed; inset: 0; z-index: 2500; 
-            background: rgba(0,0,0,0.98); 
-            clip-path: circle(0% at 95% 5%);
-            transition: clip-path 0.8s var(--transition);
+            position: fixed; inset: 0; z-index: 2500; background: rgba(0,0,0,0.98); 
+            clip-path: circle(0% at 95% 5%); transition: clip-path 0.8s var(--transition);
             display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
         .nav-overlay.open { clip-path: circle(150% at 95% 5%); }
         .nav-links { list-style: none; text-align: center; }
-        .nav-links li { overflow: hidden; margin: 15px 0; }
-        .nav-overlay a { 
-            display: inline-block; text-decoration: none; color: #fff; 
-            font-size: clamp(28px, 7vw, 50px); font-family: 'Cormorant Garamond'; 
-            letter-spacing: 2px; transform: translateY(100%); transition: 0.6s var(--transition);
+        .nav-links a { 
+            display: inline-block; text-decoration: none; color: #fff; font-size: clamp(30px, 8vw, 60px); 
+            font-family: 'Cormorant Garamond'; letter-spacing: 2px; transition: 0.5s; margin: 10px 0;
         }
-        .nav-overlay.open a { transform: translateY(0); }
-        .nav-links li:nth-child(1) a { transition-delay: 0.1s; }
-        .nav-links li:nth-child(2) a { transition-delay: 0.2s; }
-        .nav-links li:nth-child(3) a { transition-delay: 0.3s; }
-        .nav-links li:nth-child(4) a { transition-delay: 0.4s; }
-        .nav-overlay a:hover { color: var(--gold); letter-spacing: 5px; }
+        .nav-links a:hover { color: var(--gold); letter-spacing: 8px; font-style: italic; }
 
-        .mini-icons-menu { display: flex; gap: 30px; margin-top: 40px; opacity: 0; transition: 0.8s ease 0.5s; }
-        .nav-overlay.open .mini-icons-menu { opacity: 1; }
-        .mini-icons-menu i { font-size: 26px; color: var(--gold); }
-
-        /* --- HERO & BLUR SLOGAN --- */
-        .container { max-width: 1200px; margin: 0 auto; padding: 200px 20px 100px; text-align: center; }
+        /* --- HERO SECTION --- */
+        .container { max-width: 1200px; margin: 0 auto; padding: 180px 20px 80px; text-align: center; }
         .hero-title { 
-            font-family: 'Playfair Display'; font-size: clamp(45px, 12vw, 110px); font-weight: 900; 
-            background: linear-gradient(to right, #fff 20%, var(--gold) 40%, var(--gold) 60%, #fff 80%);
+            font-family: 'Playfair Display'; font-size: clamp(50px, 15vw, 130px); font-weight: 900; 
+            background: linear-gradient(to right, #fff, var(--gold), #fff);
             background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            animation: shine 4s linear infinite, floatTitle 6s ease-in-out infinite;
+            animation: shine 5s linear infinite;
         }
-        @keyframes floatTitle { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
         @keyframes shine { to { background-position: 200% center; } }
         
-        /* Premium Blur Entry Animation */
         .slogan { 
-            color: var(--gold); font-family: 'Cormorant Garamond'; font-style: italic; font-size: clamp(18px, 4vw, 24px); 
-            margin-top: 20px; letter-spacing: 2px;
-            animation: premiumBlurClear 4s cubic-bezier(0.19, 1, 0.22, 1) forwards; 
+            color: var(--gold); font-family: 'Cormorant Garamond'; font-style: italic; font-size: clamp(18px, 4vw, 26px); 
+            margin-top: 15px; letter-spacing: 3px; animation: premiumBlurClear 3s var(--transition) forwards; 
         }
         @keyframes premiumBlurClear {
-            0% { filter: blur(25px); opacity: 0; transform: scale(1.2) translateY(10px); letter-spacing: 15px; }
-            50% { filter: blur(10px); opacity: 0.5; }
-            100% { filter: blur(0); opacity: 1; transform: scale(1) translateY(0); letter-spacing: 2px; }
+            0% { filter: blur(20px); opacity: 0; transform: translateY(20px); }
+            100% { filter: blur(0); opacity: 1; transform: translateY(0); }
         }
 
-        /* --- GRID --- */
-        .work-grid { margin: 80px 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
-        .work-item { position: relative; background: rgba(10,10,10,0.8); border: 1px solid var(--border); overflow: hidden; transition: 0.6s; }
-        .work-item img { width: 100%; height: 450px; object-fit: cover; opacity: 0.7; transition: 0.8s; cursor: pointer; }
-        .work-item:hover img { opacity: 1; transform: scale(1.05); }
-        .enquire-bar { display: block; width: 100%; padding: 18px; text-align: center; background: var(--gold); color: #000; text-decoration: none; font-weight: 900; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; }
+        /* --- SECTION HEADING (DEMO DESIGNS) --- */
+        .section-header { margin: 120px 0 50px; text-align: center; }
+        .subtitle { display: block; font-size: 11px; letter-spacing: 6px; color: var(--gold); text-transform: uppercase; margin-bottom: 8px; opacity: 0.7; }
+        .demo-heading { 
+            font-family: 'Playfair Display', serif; font-size: clamp(35px, 7vw, 65px); font-weight: 900; 
+            letter-spacing: 20px; color: #fff; text-transform: uppercase; transition: 1.5s var(--transition); 
+        }
+        .reveal.active .demo-heading { letter-spacing: 5px; }
+        .gold-line { width: 0; height: 1px; background: var(--gold); margin: 20px auto; transition: 1.2s ease 0.4s; }
+        .reveal.active .gold-line { width: 100px; }
 
-        /* --- NEON SOCIALS --- */
-        .social-icons-wrap { display: flex; justify-content: center; gap: 50px; margin: 60px 0; }
-        .social-icons-wrap a { font-size: 70px; transition: 0.4s; }
-        .icon-insta { color: var(--insta-neon); filter: drop-shadow(0 0 5px var(--insta-neon)); }
-        .icon-wa { color: var(--wa-neon); filter: drop-shadow(0 0 5px var(--wa-neon)); }
-        .social-icons-wrap a:hover { transform: scale(1.1) translateY(-10px); filter: drop-shadow(0 0 30px currentColor); color: #fff; }
+        /* --- WORK GRID --- */
+        .work-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-bottom: 100px; }
+        .work-item { position: relative; background: #0a0a0a; border: 1px solid var(--border); overflow: hidden; }
+        .work-item img { width: 100%; height: 450px; object-fit: cover; opacity: 0.6; transition: 1s var(--transition); cursor: pointer; }
+        .work-item:hover img { opacity: 1; transform: scale(1.08); }
+        .enquire-bar { 
+            display: block; width: 100%; padding: 20px; text-align: center; background: var(--gold); 
+            color: #000; text-decoration: none; font-weight: 900; font-size: 12px; letter-spacing: 3px; text-transform: uppercase;
+            transition: 0.3s;
+        }
+        .enquire-bar:hover { background: #fff; letter-spacing: 5px; }
 
-        /* --- MODAL --- */
-        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.94); z-index: 4000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(15px); }
-        .modal-box { background: #000; border: 1px solid var(--gold); padding: 50px; text-align: center; width: 90%; max-width: 400px; transform: translateY(50px); opacity: 0; transition: 0.5s; }
-        .modal-box.active { transform: translateY(0); opacity: 1; }
-        .btn { width: 100%; padding: 16px; margin: 10px 0; cursor: pointer; font-weight: 800; border: none; letter-spacing: 1px; text-transform: uppercase; font-family: 'Inter'; }
+        /* --- SOCIALS --- */
+        .social-icons-wrap { display: flex; justify-content: center; gap: 60px; margin: 80px 0; }
+        .social-icons-wrap a { font-size: 65px; transition: 0.5s var(--transition); }
+        .icon-insta { color: var(--insta-neon); filter: drop-shadow(0 0 10px var(--insta-neon)); }
+        .icon-wa { color: var(--wa-neon); filter: drop-shadow(0 0 10px var(--wa-neon)); }
+        .social-icons-wrap a:hover { transform: scale(1.2) translateY(-15px); filter: drop-shadow(0 0 30px currentColor); }
+
+        /* --- MODALS & VIEWERS --- */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.96); z-index: 4000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(20px); }
+        .modal-box { background: #000; border: 1px solid var(--gold); padding: 50px; text-align: center; width: 90%; max-width: 400px; opacity: 0; transform: scale(0.9); transition: 0.5s; }
+        .modal-box.active { opacity: 1; transform: scale(1); }
+        .btn { width: 100%; padding: 18px; margin: 10px 0; cursor: pointer; font-weight: 900; border: none; letter-spacing: 2px; text-transform: uppercase; }
 
         .fs-view { position: fixed; inset: 0; background: #000; z-index: 5000; display: none; justify-content: center; align-items: center; }
         .fs-view img { max-width: 90%; max-height: 85vh; border: 1px solid var(--border); }
-        .fs-x { position: absolute; top: 30px; right: 40px; color: var(--gold); font-size: 45px; cursor: pointer; }
+        .fs-x { position: absolute; top: 40px; right: 40px; color: var(--gold); font-size: 40px; cursor: pointer; }
 
-        .reveal { opacity: 0; transform: translateY(40px); transition: 1.2s var(--transition); }
+        /* --- UTILS --- */
+        .reveal { opacity: 0; transform: translateY(50px); transition: 1.5s var(--transition); }
         .reveal.active { opacity: 1; transform: translateY(0); }
-        footer { padding: 60px 20px; text-align: center; opacity: 0.3; font-size: 9px; letter-spacing: 5px; }
+        footer { padding: 80px 20px; text-align: center; opacity: 0.4; font-size: 10px; letter-spacing: 8px; border-top: 1px solid var(--border); }
     </style>
 </head>
 <body>
 
     <div id="loader-wrapper">
-        <div class="spinner"><div class="spinnerin"></div></div>
+        <div class="spinner"></div>
     </div>
 
     <div class="bg-wrapper"><div class="bg-lines"></div></div>
@@ -157,30 +152,29 @@
     <header>
         <a href="#" class="brand-name">DesignQTEE</a>
         <div class="menu-btn" id="menuToggle">
-            <span></span>
-            <span></span>
-            <span></span>
+            <span></span><span></span><span></span>
         </div>
     </header>
 
     <nav class="nav-overlay" id="navOverlay">
         <ul class="nav-links">
-            <li><a href="#portfolio" onclick="toggleMenu()">ABOUT</a></li>
-            <li><a href="https://wa.me/917907826147" target="_blank">CONTACT</a></li>
-            <li><a href="https://wa.me/917907826147" target="_blank">WHATSAPP</a></li>
+            <li><a href="#portfolio" onclick="toggleMenu()">PORTFOLIO</a></li>
+            <li><a href="https://wa.me/917907826147" target="_blank">ENQUIRE</a></li>
             <li><a href="https://www.instagram.com/DesignQTEE" target="_blank">INSTAGRAM</a></li>
         </ul>
-        <div class="mini-icons-menu">
-            <a href="https://www.instagram.com/DesignQTEE" target="_blank"><i class="fab fa-instagram"></i></a>
-            <a href="https://wa.me/917907826147" target="_blank"><i class="fab fa-whatsapp"></i></a>
-        </div>
     </nav>
 
     <main class="container">
         <section class="reveal">
             <h1 class="hero-title">DesignQTEE</h1>
-            <p class="slogan">" You Arrived at Right Place "</p>
+            <p class="slogan">" You Arrived at the Right Place "</p>
         </section>
+
+        <div class="section-header reveal">
+            <span class="subtitle">Exclusive Gallery</span>
+            <h2 class="demo-heading">DEMO DESIGNS</h2>
+            <div class="gold-line"></div>
+        </div>
 
         <div id="portfolio" class="work-grid">
             <div class="work-item reveal"><img src="image1.png" onclick="askView('image1.png')"><a href="https://wa.me/917907826147" class="enquire-bar">Enquire Now</a></div>
@@ -201,7 +195,7 @@
 
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal-box" id="modalBox">
-            <h2 style="color:var(--gold); margin-bottom:25px; font-family:'Playfair Display';">PREVIEW DESIGN</h2>
+            <h2 style="color:var(--gold); margin-bottom:25px; font-family:'Playfair Display'; font-size: 24px;">PREVIEW DESIGN</h2>
             <button class="btn" style="background:var(--gold); color:#000;" id="goFull">FULL SCREEN</button>
             <button class="btn" style="background:transparent; color:#fff; border:1px solid var(--border);" onclick="closeModal()">DISMISS</button>
         </div>
@@ -213,25 +207,24 @@
     </div>
 
     <script>
-        // Preloader
+        // Loader
         window.addEventListener("load", () => {
             const loader = document.getElementById("loader-wrapper");
-            setTimeout(() => { loader.classList.add("loader-hidden"); }, 1200);
+            setTimeout(() => { loader.classList.add("loader-hidden"); }, 1000);
         });
 
-        // Menu Toggle (Hamburger to X)
+        // Menu
         const menuBtn = document.getElementById('menuToggle');
         const navOverlay = document.getElementById('navOverlay');
-
-        menuBtn.addEventListener('click', toggleMenu);
-
+        
         function toggleMenu() {
             menuBtn.classList.toggle('open');
             navOverlay.classList.toggle('open');
             document.body.style.overflow = navOverlay.classList.contains('open') ? 'hidden' : 'auto';
         }
+        menuBtn.addEventListener('click', toggleMenu);
 
-        // Image Handling
+        // Preview Logic
         let currentImg = "";
         function askView(src) {
             currentImg = src;
@@ -249,10 +242,10 @@
         }
         function closeFS() { document.getElementById('fsView').style.display = 'none'; }
 
-        // Intersection Observer
+        // Reveal Animation Observer
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
-        }, { threshold: 0.1 });
+        }, { threshold: 0.15 });
         document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
     </script>
 </body>
