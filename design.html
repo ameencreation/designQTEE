@@ -2,251 +2,309 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>DesignQTEE | Elite Visual Studio</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Playfair+Display:wght@700;900&family=Inter:wght@300;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DesignQTEE | Glass Premium</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Playfair+Display:ital,wght@0,700;1,900&family=Montserrat:wght@300;600&family=Prata&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
         :root {
-            --bg-black: #050505;
-            --bg-purple: #120026; 
-            --gold: #e6be8a; 
-            --text: #ffffff;
-            --border: rgba(230, 190, 138, 0.15);
-            --transition: cubic-bezier(0.77, 0, 0.175, 1);
-            --insta-neon: #ff007f;
-            --wa-neon: #00ff41;
+            --gold: #D4AF37;
+            --purple-dark: #1a0033;
+            --black: #050505;
+            --white: #ffffff;
+            --glass: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(212, 175, 55, 0.2);
+            --bg-grad: radial-gradient(circle at top right, var(--purple-dark), var(--black));
+            --text-color: var(--white);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
-        body { background: var(--bg-black); color: var(--text); font-family: 'Inter', sans-serif; overflow-x: hidden; }
+        body.light-theme {
+            --black: #f0f0f0;
+            --white: #1a1a1a;
+            --purple-dark: #e0d0ff;
+            --glass: rgba(0, 0, 0, 0.03);
+            --glass-border: rgba(212, 175, 55, 0.4);
+            --bg-grad: radial-gradient(circle at top right, #ffffff, #e0e0e0);
+            --text-color: #1a1a1a;
+        }
 
-        /* --- PRELOADER --- */
-        #loader-wrapper {
-            position: fixed; inset: 0; background: #000; z-index: 9999;
-            display: flex; justify-content: center; align-items: center;
-            transition: opacity 0.8s ease;
-        }
-        .spinner {
-            width: 3em; height: 3em; border-radius: 50%; border: 2px solid #444;
-            box-shadow: -10px -10px 10px #6359f8, 0px -10px 10px 0px #9c32e2, 10px -10px 10px #f36896, 10px 0 10px #ff0b0b, 10px 10px 10px 0px#ff5500, 0 10px 10px 0px #ff9500, -10px 10px 10px 0px #ffb700;
-            animation: rot55 0.7s linear infinite; position: relative;
-        }
-        @keyframes rot55 { to { transform: rotate(360deg); } }
-        .loader-hidden { opacity: 0; visibility: hidden; }
+        * { box-sizing: border-box; scroll-behavior: smooth; transition: background 0.5s ease, color 0.5s ease; }
 
-        /* --- BACKGROUND DYNAMICS --- */
-        .bg-wrapper { 
-            position: fixed; inset: 0; z-index: -1; 
-            background: radial-gradient(circle at center, var(--bg-purple) 0%, var(--bg-black) 100%);
-            overflow: hidden; 
+        body {
+            margin: 0; padding: 0;
+            background-color: var(--black);
+            overflow-x: hidden;
+            color: var(--text-color);
+            font-family: 'Montserrat', sans-serif;
         }
-        .bg-lines {
-            position: absolute; width: 300%; height: 300%; top: -100%; left: -150%;
-            background-image: linear-gradient(rgba(230, 190, 138, 0.05) 1px, transparent 1px);
-            background-size: 100% 50px; transform: rotate(45deg); animation: moveLines 8s linear infinite; 
+
+        /* --- DYNAMIC BACKGROUND --- */
+        .bg-layer {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg-grad);
+            z-index: -2;
         }
-        @keyframes moveLines { from { transform: rotate(45deg) translateY(0); } to { transform: rotate(45deg) translateY(50px); } }
+
+        .bg-line {
+            position: fixed;
+            top: -100%; left: -100%; width: 300%; height: 300%;
+            background: linear-gradient(45deg, 
+                transparent 45%, 
+                rgba(255, 255, 255, 0.1) 48%, 
+                rgba(212, 175, 55, 0.15) 50%, 
+                rgba(255, 255, 255, 0.1) 52%, 
+                transparent 55%);
+            z-index: -1;
+            animation: lineMove 12s linear infinite;
+        }
+
+        @keyframes lineMove { 0% { transform: translate(-5%, -5%); } 100% { transform: translate(5%, 5%); } }
+
+        /* --- THEME TOGGLE (Top Left) --- */
+        .theme-toggle {
+            position: fixed; top: 25px; left: 25px; z-index: 1000;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px);
+            padding: 10px; border-radius: 50px;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            width: 45px; height: 45px; transition: 0.3s;
+        }
+        .theme-toggle:hover { transform: rotate(20deg) scale(1.1); border-color: var(--gold); }
+        .theme-toggle i { color: var(--gold); font-size: 1.2rem; }
 
         /* --- NAVIGATION --- */
-        header { position: fixed; top: 0; width: 100%; padding: 25px 40px; display: flex; justify-content: space-between; align-items: center; z-index: 3000; backdrop-filter: blur(15px); border-bottom: 1px solid var(--border); }
-        .brand-name { font-family: 'Playfair Display'; font-size: 26px; font-weight: 900; color: var(--gold); text-decoration: none; letter-spacing: 2px; }
-        
-        .menu-btn { cursor: pointer; z-index: 3100; width: 30px; height: 20px; position: relative; }
-        .menu-btn span { display: block; position: absolute; height: 2px; width: 100%; background: var(--gold); transition: .4s var(--transition); }
-        .menu-btn span:nth-child(1) { top: 0; }
-        .menu-btn span:nth-child(2) { top: 9px; }
-        .menu-btn span:nth-child(3) { top: 18px; }
-        .menu-btn.open span:nth-child(1) { transform: translateY(9px) rotate(45deg); }
-        .menu-btn.open span:nth-child(2) { opacity: 0; }
-        .menu-btn.open span:nth-child(3) { transform: translateY(-9px) rotate(-45deg); }
+        nav { position: fixed; top: 25px; right: 25px; z-index: 1000; }
 
-        .nav-overlay { 
-            position: fixed; inset: 0; z-index: 2500; background: rgba(0,0,0,0.98); 
-            clip-path: circle(0% at 95% 5%); transition: clip-path 0.8s var(--transition);
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-        }
-        .nav-overlay.open { clip-path: circle(150% at 95% 5%); }
-        .nav-links { list-style: none; text-align: center; }
-        .nav-links a { 
-            display: inline-block; text-decoration: none; color: #fff; font-size: clamp(30px, 8vw, 60px); 
-            font-family: 'Cormorant Garamond'; letter-spacing: 2px; transition: 0.5s; margin: 10px 0;
-        }
-        .nav-links a:hover { color: var(--gold); letter-spacing: 8px; font-style: italic; }
-
-        /* --- HERO SECTION --- */
-        .container { max-width: 1200px; margin: 0 auto; padding: 180px 20px 80px; text-align: center; }
-        .hero-title { 
-            font-family: 'Playfair Display'; font-size: clamp(50px, 15vw, 130px); font-weight: 900; 
-            background: linear-gradient(to right, #fff, var(--gold), #fff);
-            background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            animation: shine 5s linear infinite;
-        }
-        @keyframes shine { to { background-position: 200% center; } }
-        
-        .slogan { 
-            color: var(--gold); font-family: 'Cormorant Garamond'; font-style: italic; font-size: clamp(18px, 4vw, 26px); 
-            margin-top: 15px; letter-spacing: 3px; animation: premiumBlurClear 3s var(--transition) forwards; 
-        }
-        @keyframes premiumBlurClear {
-            0% { filter: blur(20px); opacity: 0; transform: translateY(20px); }
-            100% { filter: blur(0); opacity: 1; transform: translateY(0); }
+        .menu-icon {
+            cursor: pointer; width: 35px; display: flex;
+            flex-direction: column; gap: 6px; align-items: flex-end;
+            background: var(--glass);
+            padding: 10px; border-radius: 8px;
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px);
         }
 
-        /* --- SECTION HEADING (DEMO DESIGNS) --- */
-        .section-header { margin: 120px 0 50px; text-align: center; }
-        .subtitle { display: block; font-size: 11px; letter-spacing: 6px; color: var(--gold); text-transform: uppercase; margin-bottom: 8px; opacity: 0.7; }
-        .demo-heading { 
-            font-family: 'Playfair Display', serif; font-size: clamp(35px, 7vw, 65px); font-weight: 900; 
-            letter-spacing: 20px; color: #fff; text-transform: uppercase; transition: 1.5s var(--transition); 
+        .menu-icon span { height: 2px; background: var(--gold); transition: 0.4s; }
+        .menu-icon span:nth-child(2) { width: 70%; }
+        .menu-icon span:nth-child(3) { width: 40%; }
+
+        .menu-window {
+            position: absolute; top: 60px; right: 0; width: 240px;
+            background: var(--glass); 
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(25px); 
+            padding: 10px; display: none;
+            flex-direction: column; border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
         }
-        .reveal.active .demo-heading { letter-spacing: 5px; }
-        .gold-line { width: 0; height: 1px; background: var(--gold); margin: 20px auto; transition: 1.2s ease 0.4s; }
-        .reveal.active .gold-line { width: 100px; }
 
-        /* --- WORK GRID --- */
-        .work-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-bottom: 100px; }
-        .work-item { position: relative; background: #0a0a0a; border: 1px solid var(--border); overflow: hidden; }
-        .work-item img { width: 100%; height: 450px; object-fit: cover; opacity: 0.6; transition: 1s var(--transition); cursor: pointer; }
-        .work-item:hover img { opacity: 1; transform: scale(1.08); }
-        .enquire-bar { 
-            display: block; width: 100%; padding: 20px; text-align: center; background: var(--gold); 
-            color: #000; text-decoration: none; font-weight: 900; font-size: 12px; letter-spacing: 3px; text-transform: uppercase;
-            transition: 0.3s;
+        .menu-window a {
+            color: var(--text-color); text-decoration: none; font-family: 'Prata', serif;
+            font-size: 0.9rem; padding: 12px; display: flex;
+            align-items: center; gap: 12px; transition: 0.3s;
         }
-        .enquire-bar:hover { background: #fff; letter-spacing: 5px; }
 
-        /* --- SOCIALS --- */
-        .social-icons-wrap { display: flex; justify-content: center; gap: 60px; margin: 80px 0; }
-        .social-icons-wrap a { font-size: 65px; transition: 0.5s var(--transition); }
-        .icon-insta { color: var(--insta-neon); filter: drop-shadow(0 0 10px var(--insta-neon)); }
-        .icon-wa { color: var(--wa-neon); filter: drop-shadow(0 0 10px var(--wa-neon)); }
-        .social-icons-wrap a:hover { transform: scale(1.2) translateY(-15px); filter: drop-shadow(0 0 30px currentColor); }
+        .menu-window a:hover { color: var(--gold); background: rgba(212, 175, 55, 0.1); border-radius: 8px; }
 
-        /* --- MODALS & VIEWERS --- */
-        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.96); z-index: 4000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(20px); }
-        .modal-box { background: #000; border: 1px solid var(--gold); padding: 50px; text-align: center; width: 90%; max-width: 400px; opacity: 0; transform: scale(0.9); transition: 0.5s; }
-        .modal-box.active { opacity: 1; transform: scale(1); }
-        .btn { width: 100%; padding: 18px; margin: 10px 0; cursor: pointer; font-weight: 900; border: none; letter-spacing: 2px; text-transform: uppercase; }
+        /* --- HERO (Reduced Main Name Size) --- */
+        .hero {
+            height: 100vh; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; text-align: center;
+        }
 
-        .fs-view { position: fixed; inset: 0; background: #000; z-index: 5000; display: none; justify-content: center; align-items: center; }
-        .fs-view img { max-width: 90%; max-height: 85vh; border: 1px solid var(--border); }
-        .fs-x { position: absolute; top: 40px; right: 40px; color: var(--gold); font-size: 40px; cursor: pointer; }
+        .main-name {
+            font-family: 'Cinzel Decorative', cursive;
+            font-size: clamp(2rem, 8vw, 4.5rem); /* Reduced Size */
+            color: var(--gold); margin: 0; letter-spacing: 8px;
+            text-shadow: 0 0 30px rgba(212, 175, 55, 0.3);
+            animation: slidein 1.8s ease-out;
+        }
 
-        /* --- UTILS --- */
-        .reveal { opacity: 0; transform: translateY(50px); transition: 1.5s var(--transition); }
-        .reveal.active { opacity: 1; transform: translateY(0); }
-        footer { padding: 80px 20px; text-align: center; opacity: 0.4; font-size: 10px; letter-spacing: 8px; border-top: 1px solid var(--border); }
+        .slogan {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(0.7rem, 1.5vw, 1rem);
+            letter-spacing: 5px; margin-top: 10px; opacity: 0;
+            filter: blur(8px); animation: clearFadeUp 2.5s forwards 1s;
+        }
+
+        @keyframes clearFadeUp { to { filter: blur(0); opacity: 0.6; transform: translateY(-5px); } }
+
+        /* --- MODAL --- */
+        #aboutModal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); z-index: 2000;
+            display: none; justify-content: center; align-items: center;
+            backdrop-filter: blur(12px);
+        }
+
+        .about-content {
+            background: var(--glass); 
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(30px);
+            padding: 40px; max-width: 500px; text-align: center;
+            border-radius: 20px; color: var(--text-color);
+            animation: modalPop 0.4s ease-out;
+        }
+
+        @keyframes modalPop { from { transform: translateY(30px); opacity: 0; } }
+
+        /* --- GALLERY HEADING --- */
+        #demo-section {
+            padding: 40px 20px 20px; text-align: center;
+            font-family: 'Cinzel Decorative'; 
+            font-size: clamp(1.1rem, 3.5vw, 1.4rem);
+            color: var(--gold); letter-spacing: 5px;
+            text-transform: uppercase;
+        }
+
+        .gallery {
+            padding: 20px 5% 80px; display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+
+        .card {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(15px);
+            border-radius: 15px;
+            overflow: hidden;
+            padding: 15px;
+            transition: 0.4s;
+            animation: slidein 2s ease-out;
+        }
+
+        .card:hover { transform: translateY(-10px); border-color: var(--gold); box-shadow: 0 10px 30px rgba(212, 175, 55, 0.1); }
+
+        .card img { 
+            width: 100%; aspect-ratio: 4/5; object-fit: cover; 
+            border-radius: 10px; cursor: pointer; transition: 0.5s; 
+        }
+
+        .btn-group { display: flex; flex-direction: column; gap: 10px; margin-top: 15px; }
+
+        .action-btn {
+            padding: 12px; border: 1px solid var(--gold);
+            text-decoration: none; font-size: 0.75rem; text-align: center;
+            font-weight: 600; text-transform: uppercase; letter-spacing: 1px;
+            transition: 0.3s; border-radius: 5px;
+        }
+
+        .order-btn { background: var(--gold); color: #000; }
+        .inquiry-btn { background: transparent; color: var(--gold); }
+        .action-btn:hover { filter: brightness(1.1); letter-spacing: 2px; }
+
+        /* --- FOOTER --- */
+        footer {
+            padding: 50px 20px; background: var(--glass); text-align: center;
+            border-top: 1px solid var(--glass-border);
+            backdrop-filter: blur(15px);
+        }
+
+        .small-socials { display: flex; justify-content: center; gap: 25px; margin: 20px 0; }
+        .small-socials a { color: var(--gold); font-size: 1.2rem; transition: 0.3s; }
+        .small-socials a:hover { transform: scale(1.2); }
+
+        .copyright { font-size: 0.7rem; color: var(--text-color); opacity: 0.6; letter-spacing: 2px; }
+
+        @keyframes slidein { from { transform: translateX(100px); opacity: 0; } }
+
     </style>
 </head>
 <body>
 
-    <div id="loader-wrapper">
-        <div class="spinner"></div>
+    <div class="bg-layer"></div>
+    <div class="bg-line"></div>
+
+    <div class="theme-toggle" onclick="toggleTheme()" title="Toggle Mode">
+        <i id="theme-icon" class="fas fa-moon"></i>
     </div>
 
-    <div class="bg-wrapper"><div class="bg-lines"></div></div>
-
-    <header>
-        <a href="#" class="brand-name">DesignQTEE</a>
-        <div class="menu-btn" id="menuToggle">
+    <nav>
+        <div class="menu-icon" onclick="toggleMenu()">
             <span></span><span></span><span></span>
         </div>
-    </header>
-
-    <nav class="nav-overlay" id="navOverlay">
-        <ul class="nav-links">
-            <li><a href="#portfolio" onclick="toggleMenu()">PORTFOLIO</a></li>
-            <li><a href="https://wa.me/917907826147" target="_blank">ENQUIRE</a></li>
-            <li><a href="https://www.instagram.com/DesignQTEE" target="_blank">INSTAGRAM</a></li>
-        </ul>
+        <div class="menu-window" id="menuWindow">
+            <a href="javascript:void(0)" onclick="openAbout()">ABOUT <i class="fas fa-info-circle"></i></a>
+            <a href="#demo-section" onclick="toggleMenu()">DEMO DESIGNS <i class="fas fa-images"></i></a>
+            <a href="tel:+917907826147">CONTACT <i class="fas fa-phone-alt"></i></a>
+            <a href="https://instagram.com/DesignQTEE" target="_blank">INSTAGRAM <i class="fab fa-instagram"></i></a>
+        </div>
     </nav>
 
-    <main class="container">
-        <section class="reveal">
-            <h1 class="hero-title">DesignQTEE</h1>
-            <p class="slogan">" You Arrived at the Right Place "</p>
-        </section>
-
-        <div class="section-header reveal">
-            <span class="subtitle">Exclusive Gallery</span>
-            <h2 class="demo-heading">DEMO DESIGNS</h2>
-            <div class="gold-line"></div>
+    <div id="aboutModal" onclick="closeAbout()">
+        <div class="about-content" onclick="event.stopPropagation()">
+            <h3 style="font-family: 'Cinzel Decorative'; color: var(--gold); margin-bottom: 15px;">PREMIUM SERVICE</h3>
+            <p style="line-height: 1.8; font-size: 0.9rem;">THIS IS THE WEBPAGE FOR PROVIDING BEST ADVERTISING POSTERS AND INCREASE YOUR BUSINESS REPUTATION.</p>
+            <button class="action-btn inquiry-btn" onclick="closeAbout()" style="margin-top: 20px; width: 100px; cursor: pointer;">CLOSE</button>
         </div>
+    </div>
 
-        <div id="portfolio" class="work-grid">
-            <div class="work-item reveal"><img src="image1.png" onclick="askView('image1.png')"><a href="https://wa.me/917907826147" class="enquire-bar">Enquire Now</a></div>
-            <div class="work-item reveal"><img src="image2.png" onclick="askView('image2.png')"><a href="https://wa.me/917907826147" class="enquire-bar">Enquire Now</a></div>
-            <div class="work-item reveal"><img src="image3.png" onclick="askView('image3.png')"><a href="https://wa.me/917907826147" class="enquire-bar">Enquire Now</a></div>
-            <div class="work-item reveal"><img src="image4.png" onclick="askView('image4.png')"><a href="https://wa.me/917907826147" class="enquire-bar">Enquire Now</a></div>
-        </div>
+    <div class="hero">
+        <h1 class="main-name">DesignQTEE</h1>
+        <p class="slogan">YOU ARRIVED AT RIGHT PLACE</p>
+    </div>
 
-        <section class="social-connect reveal">
-            <div class="social-icons-wrap">
-                <a href="https://www.instagram.com/DesignQTEE" target="_blank" class="icon-insta"><i class="fab fa-instagram"></i></a>
-                <a href="https://wa.me/917907826147" target="_blank" class="icon-wa"><i class="fab fa-whatsapp"></i></a>
+    <h2 id="demo-section">Demo Masterpieces</h2>
+    
+    <div class="gallery">
+        <div class="card">
+            <img src="image1.jpg">
+            <div class="btn-group">
+                <a href="https://wa.me/917907826147?text=I%20want%20this%20Poster" class="action-btn order-btn">You Want this type of Posters</a>
+                <a href="https://wa.me/917907826147?text=Inquiry%20Poster%201" class="action-btn inquiry-btn">Inquiry Now</a>
             </div>
-        </section>
-
-        <footer>&copy; 2026 DESIGNQTEE STUDIO | CREATED BY AMEEN</footer>
-    </main>
-
-    <div class="modal-overlay" id="modalOverlay">
-        <div class="modal-box" id="modalBox">
-            <h2 style="color:var(--gold); margin-bottom:25px; font-family:'Playfair Display'; font-size: 24px;">PREVIEW DESIGN</h2>
-            <button class="btn" style="background:var(--gold); color:#000;" id="goFull">FULL SCREEN</button>
-            <button class="btn" style="background:transparent; color:#fff; border:1px solid var(--border);" onclick="closeModal()">DISMISS</button>
+        </div>
+        <div class="card">
+            <img src="image2.jpg">
+            <div class="btn-group">
+                <a href="https://wa.me/917907826147?text=I%20want%20this%20Poster" class="action-btn order-btn">You Want this type of Posters</a>
+                <a href="https://wa.me/917907826147?text=Inquiry%20Poster%202" class="action-btn inquiry-btn">Inquiry Now</a>
+            </div>
+        </div>
+        <div class="card">
+            <img src="image3.jpg">
+            <div class="btn-group">
+                <a href="https://wa.me/917907826147?text=I%20want%20this%20Poster" class="action-btn order-btn">You Want this type of Posters</a>
+                <a href="https://wa.me/917907826147?text=Inquiry%20Poster%203" class="action-btn inquiry-btn">Inquiry Now</a>
+            </div>
+        </div>
+        <div class="card">
+            <img src="image4.jpg">
+            <div class="btn-group">
+                <a href="https://wa.me/917907826147?text=I%20want%20this%20Poster" class="action-btn order-btn">You Want this type of Posters</a>
+                <a href="https://wa.me/917907826147?text=Inquiry%20Poster%204" class="action-btn inquiry-btn">Inquiry Now</a>
+            </div>
         </div>
     </div>
 
-    <div class="fs-view" id="fsView">
-        <span class="fs-x" onclick="closeFS()">&times;</span>
-        <img src="" id="fsImg">
-    </div>
+    <footer>
+        <div class="footer-logo" style="font-family: 'Cinzel Decorative'; color: var(--gold); font-size: 1.2rem;">DesignQTEE</div>
+        <div class="small-socials">
+            <a href="https://wa.me/917907826147"><i class="fab fa-whatsapp"></i></a>
+            <a href="https://instagram.com/DesignQTEE"><i class="fab fa-instagram"></i></a>
+        </div>
+        <div class="copyright">&copy; 2026 BY DesignQTEE</div>
+    </footer>
 
     <script>
-        // Loader
-        window.addEventListener("load", () => {
-            const loader = document.getElementById("loader-wrapper");
-            setTimeout(() => { loader.classList.add("loader-hidden"); }, 1000);
-        });
-
-        // Menu
-        const menuBtn = document.getElementById('menuToggle');
-        const navOverlay = document.getElementById('navOverlay');
-        
         function toggleMenu() {
-            menuBtn.classList.toggle('open');
-            navOverlay.classList.toggle('open');
-            document.body.style.overflow = navOverlay.classList.contains('open') ? 'hidden' : 'auto';
+            const m = document.getElementById('menuWindow');
+            m.style.display = (m.style.display === 'flex') ? 'none' : 'flex';
         }
-        menuBtn.addEventListener('click', toggleMenu);
+        function openAbout() { document.getElementById('aboutModal').style.display = 'flex'; toggleMenu(); }
+        function closeAbout() { document.getElementById('aboutModal').style.display = 'none'; }
 
-        // Preview Logic
-        let currentImg = "";
-        function askView(src) {
-            currentImg = src;
-            document.getElementById('modalOverlay').style.display = 'flex';
-            setTimeout(() => document.getElementById('modalBox').classList.add('active'), 10);
+        function toggleTheme() {
+            const body = document.body;
+            const icon = document.getElementById('theme-icon');
+            body.classList.toggle('light-theme');
+            icon.classList.toggle('fa-moon');
+            icon.classList.toggle('fa-sun');
         }
-        function closeModal() {
-            document.getElementById('modalBox').classList.remove('active');
-            setTimeout(() => document.getElementById('modalOverlay').style.display = 'none', 400);
-        }
-        document.getElementById('goFull').onclick = () => {
-            closeModal();
-            document.getElementById('fsImg').src = currentImg;
-            document.getElementById('fsView').style.display = 'flex';
-        }
-        function closeFS() { document.getElementById('fsView').style.display = 'none'; }
-
-        // Reveal Animation Observer
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
-        }, { threshold: 0.15 });
-        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
     </script>
 </body>
 </html>
