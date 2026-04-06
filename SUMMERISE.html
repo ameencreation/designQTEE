@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="ml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASSET Academy | Elite</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Inter:wght@300;400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --accent: #E2B13C; /* Luxury Gold */
+            --bg: #080808;
+            --surface: #121212;
+            --text-main: #FFFFFF;
+            --text-dim: #A0A0A0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: #000;
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: flex-end; /* വലതുവശത്തേക്ക് അലൈൻ ചെയ്തു */
+        }
+
+        /* സൈഡ് പാനൽ കണ്ടെയ്നർ */
+        .side-panel {
+            width: 420px;
+            height: 100%;
+            background: var(--surface);
+            border-left: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: -20px 0 50px rgba(0,0,0,0.9);
+            scrollbar-width: none;
+        }
+
+        .side-panel::-webkit-scrollbar { display: none; }
+
+        /* ഹീറോ സെക്ഷൻ */
+        .hero-img {
+            width: 100%;
+            height: auto;
+            border-bottom: 3px solid var(--accent);
+            object-fit: cover;
+        }
+
+        .content {
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        /* ടൈമർ എഫക്റ്റ് */
+        .timer-header {
+            font-family: 'Syncopate', sans-serif;
+            font-size: 10px;
+            letter-spacing: 5px;
+            color: var(--accent);
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+
+        .timer-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 40px;
+        }
+
+        .timer-unit {
+            background: rgba(255,255,255,0.03);
+            padding: 15px 5px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .timer-val {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 26px;
+            font-weight: 700;
+            display: block;
+            color: #fff;
+        }
+
+        .timer-lbl {
+            font-size: 9px;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* ഇൻഫോ കാർഡ് */
+        .info-card {
+            background: #1a1a1a;
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 40px;
+            text-align: left;
+            border: 1px solid rgba(226, 177, 60, 0.1);
+        }
+
+        .info-row {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .info-row:last-child { margin-bottom: 0; }
+
+        .info-row span {
+            font-size: 13px;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            min-width: 60px;
+        }
+
+        .info-row p {
+            font-weight: 600;
+            font-size: 15px;
+            color: #fff;
+        }
+
+        /* രജിസ്ട്രേഷൻ */
+        .reg-label {
+            font-family: 'Syncopate', sans-serif;
+            font-size: 11px;
+            letter-spacing: 3px;
+            color: var(--accent);
+            margin-bottom: 20px;
+        }
+
+        .qr-box {
+            width: 160px;
+            height: 160px;
+            margin: 0 auto 40px;
+            padding: 12px;
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(226, 177, 60, 0.15);
+        }
+
+        .qr-box img { width: 100%; height: 100%; }
+
+        /* ആക്ഷൻ ബട്ടണുകൾ */
+        .actions { display: flex; flex-direction: column; gap: 12px; }
+
+        .btn {
+            padding: 18px;
+            border-radius: 16px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 13px;
+            letter-spacing: 1px;
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-link { 
+            background: var(--text-main); 
+            color: #000; 
+        }
+
+        .btn-wa { 
+            background: transparent; 
+            color: #25d366; 
+            border: 1px solid rgba(37, 211, 102, 0.3);
+        }
+
+        .btn:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.4); }
+
+        @media (max-width: 500px) {
+            .side-panel { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="side-panel">
+        <img src="image0.png" alt="Header" class="hero-img">
+
+        <div class="content">
+            <div class="timer-header">Event Starting At</div>
+            
+            <div class="timer-grid">
+                <div class="timer-unit"><span class="timer-val" id="days">00</span><span class="timer-lbl">Days</span></div>
+                <div class="timer-unit"><span class="timer-val" id="hours">00</span><span class="timer-lbl">Hrs</span></div>
+                <div class="timer-unit"><span class="timer-val" id="mins">00</span><span class="timer-lbl">Min</span></div>
+                <div class="timer-unit"><span class="timer-val" id="secs">00</span><span class="timer-lbl">Sec</span></div>
+            </div>
+
+            <div class="info-card">
+                <div class="info-row"><span>Date</span><p>20 - 26 April, 2026</p></div>
+                <div class="info-row"><span>Time</span><p>02:15 PM</p></div>
+                <div class="info-row"><span>Place</span><p>ASSET Academy, Othayi</p></div>
+            </div>
+
+            <div class="reg-label">For Registration</div>
+            <div class="qr-box">
+                <img src="image1.png" alt="QR Code">
+            </div>
+
+            <div class="actions">
+                <a href="https://forms.gle/JfN3gaQTWxSCSd9CA" class="btn btn-link" target="_blank">REGISTER VIA LINK</a>
+                <a href="https://wa.me/917907826147?text=Hi, My name is " class="btn btn-wa" target="_blank">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" width="18">
+                    VIA WHATSAPP
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const targetDate = new Date("April 20, 2026 00:00:00").getTime();
+
+        function updateTimer() {
+            const now = new Date().getTime();
+            const diff = targetDate - now;
+
+            if (diff <= 0) {
+                document.querySelector('.timer-grid').innerHTML = "<p style='color:var(--accent); font-weight:bold; grid-column: span 4;'>EVENT STARTED</p>";
+                return;
+            }
+
+            const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((diff % (1000 * 60)) / 1000);
+
+            document.getElementById('days').innerText = String(d).padStart(2, '0');
+            document.getElementById('hours').innerText = String(h).padStart(2, '0');
+            document.getElementById('mins').innerText = String(m).padStart(2, '0');
+            document.getElementById('secs').innerText = String(s).padStart(2, '0');
+        }
+
+        setInterval(updateTimer, 1000);
+        updateTimer();
+    </script>
+
+</body>
+</html>
+
